@@ -50,8 +50,11 @@ const CDRSpecBlock PENDING = nil;
     }
 }
 
-- (void)run {
-    if (block_) {
+- (void)runOnlyFocused:(BOOL)onlyFocused {
+    if (onlyFocused && !self.isFocused) {
+        self.state = CDRExampleStateSkipped;
+    }
+    else if (block_) {
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         @try {
             [parent_ setUp];
@@ -66,7 +69,8 @@ const CDRSpecBlock PENDING = nil;
         }
         [parent_ tearDown];
         [pool drain];
-    } else {
+    }
+    else {
         self.state = CDRExampleStatePending;
     }
 }

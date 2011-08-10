@@ -2,18 +2,19 @@
 
 @implementation CDRExampleBase
 
-@synthesize text = text_, parent = parent_;
+@synthesize text = text_, parent = parent_, focused = focused_;
 
 - (id)initWithText:(NSString *)text {
-  if (self = [super init]) {
-    text_ = [text retain];
-  }
-  return self;
+    if (self = [super init]) {
+        text_ = [text retain];
+        focused_ = NO;
+    }
+    return self;
 }
 
 - (void)dealloc {
-  [text_ release];
-  [super dealloc];
+    [text_ release];
+    [super dealloc];
 }
 
 - (void)setUp {
@@ -22,7 +23,11 @@
 - (void)tearDown {
 }
 
-- (void)run {
+- (void)runOnlyFocused:(BOOL)onlyFocused {
+}
+
+- (BOOL)hasFocusedExamples {
+    return focused_;
 }
 
 - (BOOL)hasChildren {

@@ -85,7 +85,7 @@ CDRSharedExampleBlock sharedExampleMethod = [^(NSDictionary *context) {
         beforeEach(^{
             rootGroup = [[CDRExampleGroup alloc] initWithText:@"wibble wobble" isRoot:YES];
             [rootGroup add:example];
-            
+
             expect(example.parent).to_not(be_nil());
             BOOL hasFullText = example.parent.hasFullText;
             expect(hasFullText).to_not(be_truthy());
@@ -116,6 +116,46 @@ describe(@"CDRExample", ^{
         });
     });
 
+    describe(@"isFocused", ^{
+        it(@"should return false by default", ^{
+            example.focused = NO;
+            BOOL isFocused = example.isFocused;
+            expect(isFocused).to_not(be_truthy());
+        });
+
+        it(@"should return false when example is not focused", ^{
+            example.focused = NO;
+            BOOL isFocused = example.isFocused;
+            expect(isFocused).to_not(be_truthy());
+        });
+
+        it(@"should return true when example is focused", ^{
+            example.focused = YES;
+            BOOL isFocused = example.isFocused;
+            expect(isFocused).to(be_truthy());
+        });
+    });
+
+    describe(@"hasFocusedExamples", ^{
+        it(@"should return false by default", ^{
+            example.focused = NO;
+            BOOL hasFocusedExamples = example.hasFocusedExamples;
+            expect(hasFocusedExamples).to_not(be_truthy());
+        });
+
+        it(@"should return false when example is not focused", ^{
+            example.focused = NO;
+            BOOL hasFocusedExamples = example.hasFocusedExamples;
+            expect(hasFocusedExamples).to_not(be_truthy());
+        });
+
+        it(@"should return true when example is focused", ^{
+            example.focused = YES;
+            BOOL hasFocusedExamples = example.hasFocusedExamples;
+            expect(hasFocusedExamples).to(be_truthy());
+        });
+    });
+
     describe(@"state", ^{
         context(@"for a newly created example", ^{
             it(@"should be CDRExampleStateIncomplete", ^{
@@ -126,7 +166,7 @@ describe(@"CDRExample", ^{
 
         context(@"for an example that has run and succeeded", ^{
             beforeEach(^{
-                [example run];
+                [example runOnlyFocused:NO];
             });
 
             it(@"should be CDRExampleStatePassed", ^{
@@ -139,7 +179,7 @@ describe(@"CDRExample", ^{
             beforeEach(^{
                 [example release];
                 example = [[CDRExample alloc] initWithText:@"I should fail" andBlock:^{ fail(@"fail"); }];
-                [example run];
+                [example runOnlyFocused:NO];
             });
 
             it(@"should be CDRExampleStateFailed", ^{
@@ -152,7 +192,7 @@ describe(@"CDRExample", ^{
             beforeEach(^{
                 [example release];
                 example = [[CDRExample alloc] initWithText:@"I should throw an NSException" andBlock:^{ [[NSException exceptionWithName:@"name" reason:@"reason" userInfo:nil] raise]; }];
-                [example run];
+                [example runOnlyFocused:NO];
             });
 
             it(@"should be CDRExceptionStateError", ^{
@@ -165,7 +205,7 @@ describe(@"CDRExample", ^{
             beforeEach(^{
                 [example release];
                 example = [[CDRExample alloc] initWithText:@"I should throw some nonsense" andBlock:^{ @throw @"Some nonsense"; }];
-                [example run];
+                [example runOnlyFocused:NO];
             });
 
             it(@"should be CDRExceptionStateError", ^{
@@ -178,12 +218,41 @@ describe(@"CDRExample", ^{
             beforeEach(^{
                 [example release];
                 example = [[CDRExample alloc] initWithText:@"I should be pending" andBlock:PENDING];
-                [example run];
+                [example runOnlyFocused:NO];
             });
 
             it(@"should be CDRExceptionStatePending", ^{
                 CDRExampleState state = example.state;
                 expect(state).to(equal(CDRExampleStatePending));
+            });
+        });
+
+        context(@"when running focused specs", ^{
+            context(@"for an example that has run and was not focused on", ^{
+                beforeEach(^{
+                    [example release];
+                    example = [[CDRExample alloc] initWithText:@"I should be skipped" andBlock:^{}];
+                    [example runOnlyFocused:YES];
+                });
+
+                it(@"should be CDRExceptionStateSkipped", ^{
+                    CDRExampleState state = example.state;
+                    expect(state).to(equal(CDRExampleStateSkipped));
+                });
+            });
+
+            context(@"for an example that has run and was focused on", ^{
+                beforeEach(^{
+                    [example release];
+                    example = [[CDRExample alloc] initWithText:@"I should not be skipped" andBlock:^{}];
+                    example.focused = YES;
+                    [example runOnlyFocused:YES];
+                });
+
+                it(@"should be CDRExceptionStatePassed", ^{
+                    CDRExampleState state = example.state;
+                    expect(state).to(equal(CDRExampleStatePassed));
+                });
             });
         });
 
@@ -193,7 +262,7 @@ describe(@"CDRExample", ^{
                 [[mockObserver expect] observeValueForKeyPath:@"state" ofObject:example change:[OCMArg any] context:NULL];
 
                 [example addObserver:mockObserver forKeyPath:@"state" options:0 context:NULL];
-                [example run];
+                [example runOnlyFocused:NO];
                 [example removeObserver:mockObserver forKeyPath:@"state"];
 
                 [mockObserver verify];
@@ -213,9 +282,10 @@ describe(@"CDRExample", ^{
                 expect(progress).to(equal(0.0));
             });
         });
+
         describe(@"when the state is passed", ^{
             beforeEach(^{
-                [example run];
+                [example runOnlyFocused:NO];
                 CDRExampleState state = example.state;
                 expect(state).to(equal(CDRExampleStatePassed));
             });
@@ -255,7 +325,7 @@ describe(@"CDRExample", ^{
             beforeEach(^{
                 [example release];
                 example = [[CDRExample alloc] initWithText:@"I should pass" andBlock:^{}];
-                [example run];
+                [example runOnlyFocused:NO];
             });
 
             it(@"should return an empty string", ^{
@@ -268,7 +338,21 @@ describe(@"CDRExample", ^{
             beforeEach(^{
                 [example release];
                 example = [[CDRExample alloc] initWithText:@"I should pend" andBlock:nil];
-                [example run];
+                [example runOnlyFocused:NO];
+            });
+
+            it(@"should return an empty string", ^{
+                NSString *message = example.message;
+                expect(message).to(equal(@""));
+            });
+        });
+
+        describe(@"for a skipped example", ^{
+            beforeEach(^{
+                [example release];
+                example = [[CDRExample alloc] initWithText:@"I should pend" andBlock:nil];
+                example.focused = NO;
+                [example runOnlyFocused:YES];
             });
 
             it(@"should return an empty string", ^{
@@ -283,7 +367,7 @@ describe(@"CDRExample", ^{
             beforeEach(^{
                 [example release];
                 example = [[CDRExample alloc] initWithText:@"I should fail" andBlock:^{[[CDRSpecFailure specFailureWithReason:failureMessage] raise];}];
-                [example run];
+                [example runOnlyFocused:NO];
             });
 
             it(@"should return the failure message", ^{
@@ -300,7 +384,7 @@ describe(@"CDRExample", ^{
 
                 [example release];
                 example = [[CDRExample alloc] initWithText:@"I should throw an exception" andBlock:^{ [exception raise]; }];
-                [example run];
+                [example runOnlyFocused:NO];
             });
 
             it(@"should return the description of the exception", ^{
@@ -314,7 +398,7 @@ describe(@"CDRExample", ^{
             beforeEach(^{
                 [example release];
                 example = [[CDRExample alloc] initWithText:@"I should throw an exception" andBlock:^{ @throw failureMessage; }];
-                [example run];
+                [example runOnlyFocused:NO];
             });
 
             it(@"should return the description of whatever was thrown", ^{

@@ -81,10 +81,28 @@
     return aggregateProgress / [examples_ count];
 }
 
-- (void)run {
+- (void)runOnlyFocused:(BOOL)onlyFocused {
     [self startObservingExamples];
-    [examples_ makeObjectsPerformSelector:@selector(run)];
+    for (CDRExampleBase *example in examples_) {
+        if (onlyFocused && self.isFocused) {
+            [example runOnlyFocused:NO];
+        } else {
+            [example runOnlyFocused:onlyFocused];
+        }
+    }
     [self stopObservingExamples];
+}
+
+- (BOOL)hasFocusedExamples {
+    if (self.isFocused) {
+        return YES;
+    }
+    for (CDRExampleBase *example in examples_) {
+        if ([example hasFocusedExamples]) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 - (BOOL)hasChildren {

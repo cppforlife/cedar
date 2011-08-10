@@ -67,6 +67,83 @@ describe(@"CDRExampleGroup", ^{
         });
     });
 
+    describe(@"isFocused", ^{
+        it(@"should return false by default", ^{
+            group.focused = NO;
+            BOOL isFocused = group.isFocused;
+            expect(isFocused).to_not(be_truthy());
+        });
+
+        it(@"should return false when group is not focused", ^{
+            group.focused = NO;
+            BOOL isFocused = group.isFocused;
+            expect(isFocused).to_not(be_truthy());
+        });
+
+        it(@"should return true when group is focused", ^{
+            group.focused = YES;
+            BOOL isFocused = group.isFocused;
+            expect(isFocused).to(be_truthy());
+        });
+    });
+
+    describe(@"hasFocusedExamples", ^{
+        context(@"for a group that is focused", ^{
+            beforeEach(^{
+                group.focused = YES;
+            });
+
+            it(@"should return true", ^{
+                BOOL hasFocusedExamples = group.hasFocusedExamples;
+                expect(hasFocusedExamples).to(be_truthy());
+            });
+        });
+
+        context(@"for a group that is not focused", ^{
+            beforeEach(^{
+                BOOL isFocused = group.focused;
+                expect(isFocused).to_not(be_truthy());
+            });
+
+            it(@"should return false", ^{
+                BOOL hasFocusedExamples = group.hasFocusedExamples;
+                expect(hasFocusedExamples).to_not(be_truthy());
+            });
+
+            context(@"with at least one focused example", ^{
+                beforeEach(^{
+                    [group add:failingExample];
+                    [group add:passingExample];
+                    passingExample.focused = YES;
+                });
+
+                it(@"should return true", ^{
+                    BOOL hasFocusedExamples = group.hasFocusedExamples;
+                    expect(hasFocusedExamples).to(be_truthy());
+                });
+            });
+
+            context(@"with at least one focused group", ^{
+                beforeEach(^{
+                    CDRExampleGroup *innerGroup = [[CDRExampleGroup alloc] initWithText:@"Inner group"];
+                    innerGroup.focused = YES;
+                    [group add:innerGroup];
+
+                    CDRExampleGroup *anotherInnerGroup = [[CDRExampleGroup alloc] initWithText:@"Another inner group"];
+                    [group add:anotherInnerGroup];
+
+                    [innerGroup release];
+                    [anotherInnerGroup release];
+                });
+
+                it(@"should return true", ^{
+                    BOOL hasFocusedExamples = group.hasFocusedExamples;
+                    expect(hasFocusedExamples).to(be_truthy());
+                });
+            });
+        });
+    });
+
     describe(@"state", ^{
         describe(@"for a group containing no examples", ^{
             beforeEach(^{
@@ -95,7 +172,7 @@ describe(@"CDRExampleGroup", ^{
             describe(@"with only passing examples", ^{
                 beforeEach(^{
                     [group add:passingExample];
-                    [group run];
+                    [group runOnlyFocused:NO];
                 });
 
                 it(@"should be CDRExampleStatePassed", ^{
@@ -107,7 +184,7 @@ describe(@"CDRExampleGroup", ^{
             describe(@"with only failing examples", ^{
                 beforeEach(^{
                     [group add:failingExample];
-                    [group run];
+                    [group runOnlyFocused:NO];
                 });
 
                 it(@"should be CDRExampleStateFailed", ^{
@@ -119,7 +196,7 @@ describe(@"CDRExampleGroup", ^{
             describe(@"with only pending examples", ^{
                 beforeEach(^{
                     [group add:pendingExample];
-                    [group run];
+                    [group runOnlyFocused:NO];
                 });
 
                 it(@"should be CDRExampleStatePending", ^{
@@ -128,10 +205,23 @@ describe(@"CDRExampleGroup", ^{
                 });
             });
 
+            describe(@"with only skipped examples", ^{
+                beforeEach(^{
+                    [group add:passingExample];
+                    passingExample.focused = NO;
+                    [group runOnlyFocused:YES];
+                });
+
+                it(@"should be CDRExampleStateSkipped", ^{
+                    CDRExampleState state = group.state;
+                    expect(state).to(equal(CDRExampleStateSkipped));
+                });
+            });
+
             describe(@"with only error examples", ^{
                 beforeEach(^{
                     [group add:errorExample];
-                    [group run];
+                    [group runOnlyFocused:NO];
                 });
 
                 it(@"should be CDRExampleStateError", ^{
@@ -148,7 +238,7 @@ describe(@"CDRExampleGroup", ^{
                 describe(@"with all other examples passing", ^{
                     beforeEach(^{
                         [group add:passingExample];
-                        [group run];
+                        [group runOnlyFocused:NO];
                     });
 
                     it(@"should be CDRExampleStateFailed", ^{
@@ -160,7 +250,7 @@ describe(@"CDRExampleGroup", ^{
                 describe(@"with at least one pending example", ^{
                     beforeEach(^{
                         [group add:pendingExample];
-                        [group run];
+                        [group runOnlyFocused:NO];
                     });
 
                     it(@"should be CDRExampleStateFailed", ^{
@@ -178,7 +268,7 @@ describe(@"CDRExampleGroup", ^{
                 describe(@"with all other examples passing", ^{
                     beforeEach(^{
                         [group add:passingExample];
-                        [group run];
+                        [group runOnlyFocused:NO];
                     });
 
                     it(@"should be CDRExampleStateError", ^{
@@ -190,7 +280,7 @@ describe(@"CDRExampleGroup", ^{
                 describe(@"with at least one failing example", ^{
                     beforeEach(^{
                         [group add:failingExample];
-                        [group run];
+                        [group runOnlyFocused:NO];
                     });
 
                     it(@"should be CDRExampleStateError", ^{
@@ -202,7 +292,7 @@ describe(@"CDRExampleGroup", ^{
                 describe(@"with at least one pending example", ^{
                     beforeEach(^{
                         [group add:pendingExample];
-                        [group run];
+                        [group runOnlyFocused:NO];
                     });
 
                     it(@"should be CDRExampleStateError", ^{
@@ -220,7 +310,7 @@ describe(@"CDRExampleGroup", ^{
                 describe(@"with all other examples passing", ^{
                     beforeEach(^{
                         [group add:passingExample];
-                        [group run];
+                        [group runOnlyFocused:NO];
                     });
 
                     it(@"should be CDRExampleStatePending", ^{
@@ -244,7 +334,7 @@ describe(@"CDRExampleGroup", ^{
 
                 it(@"should report that the state has changed", ^{
                     [group addObserver:mockObserver forKeyPath:@"state" options:0 context:NULL];
-                    [group run];
+                    [group runOnlyFocused:NO];
                     [group removeObserver:mockObserver forKeyPath:@"state"];
 
                     [mockObserver verify];
@@ -267,7 +357,7 @@ describe(@"CDRExampleGroup", ^{
 
                 it(@"should report that the state has changed", ^{
                     [group addObserver:mockObserver forKeyPath:@"state" options:0 context:NULL];
-                    [group run];
+                    [group runOnlyFocused:NO];
                     [group removeObserver:mockObserver forKeyPath:@"state"];
 
                     [mockObserver verify];
@@ -277,7 +367,7 @@ describe(@"CDRExampleGroup", ^{
             describe(@"when a child example changes state, but the group state does not change", ^{
                 beforeEach(^{
                     [group add:failingExample];
-                    [failingExample run];
+                    [failingExample runOnlyFocused:NO];
 
                     [group add:passingExample];
                     CDRExampleState state = group.state;
@@ -288,7 +378,7 @@ describe(@"CDRExampleGroup", ^{
                 });
 
                 it(@"should not report that the state has changed", ^{
-                    [group run];
+                    [group runOnlyFocused:NO];
                     CDRExampleState state = group.state;
                     expect(state).to(equal(CDRExampleStateFailed));
                 });
@@ -323,7 +413,7 @@ describe(@"CDRExampleGroup", ^{
         describe(@"when the group contains all complete children", ^{
             beforeEach(^{
                 [group add:passingExample];
-                [passingExample run];
+                [passingExample runOnlyFocused:NO];
             });
 
             it(@"should be equal to 1", ^{
@@ -336,9 +426,9 @@ describe(@"CDRExampleGroup", ^{
             beforeEach(^{
                 [group add:incompleteExample];
                 [group add:passingExample];
-                [passingExample run];
+                [passingExample runOnlyFocused:NO];
                 [group add:failingExample];
-                [failingExample run];
+                [failingExample runOnlyFocused:NO];
             });
 
             it(@"should be the mean of the progress of each child", ^{
@@ -447,7 +537,6 @@ describe(@"CDRExampleGroup", ^{
                 expect(fullText).to(equal(text));
             });
         });
-
     });
 });
 

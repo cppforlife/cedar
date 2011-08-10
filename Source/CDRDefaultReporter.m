@@ -16,6 +16,7 @@
 - (id)init {
     if (self = [super init]) {
         pendingMessages_ = [[NSMutableArray alloc] init];
+        skippedMessages_ = [[NSMutableArray alloc] init];
         failureMessages_ = [[NSMutableArray alloc] init];
     }
     return self;
@@ -25,12 +26,15 @@
     [rootGroups_ release];
     [startTime_ release];
     [failureMessages_ release];
+    [skippedMessages_ release];
     [pendingMessages_ release];
     [super dealloc];
 }
 
 #pragma mark Public interface
-- (void)runWillStartWithGroups:(NSArray *)groups {
+- (void)runWillStartWithGroups:(NSArray *)groups onlyFocused:(BOOL)onlyFocused {
+    ranOnlyFocusedExamples_ = onlyFocused;
+
     rootGroups_ = [groups retain];
     [self startObservingExamples:rootGroups_];
     startTime_ = [[NSDate alloc] init];
@@ -52,7 +56,7 @@
 }
 
 - (int)result {
-    if ([failureMessages_ count]) {
+    if (ranOnlyFocusedExamples_ || [failureMessages_ count]) {
         return 1;
     } else {
         return 0;
@@ -70,6 +74,14 @@
 
 - (NSString *)pendingMessageForExample:(CDRExample *)example {
     return [NSString stringWithFormat:@"PENDING %@", [example fullText]];
+}
+
+- (NSString *)skippedToken {
+    return @">";
+}
+
+- (NSString *)skippedMessageForExample:(CDRExample *)example {
+    return [NSString stringWithFormat:@"SKIPPED %@", [example fullText]];
 }
 
 - (NSString *)failureToken {
@@ -127,6 +139,10 @@
             printf("%s", [[self pendingToken] cStringUsingEncoding:NSUTF8StringEncoding]);
             [pendingMessages_ addObject:[self pendingMessageForExample:example]];
             break;
+        case CDRExampleStateSkipped:
+            printf("%s", [[self skippedToken] cStringUsingEncoding:NSUTF8StringEncoding]);
+            [skippedMessages_ addObject:[self skippedMessageForExample:example]];
+            break;
         case CDRExampleStateFailed:
             printf("%s", [[self failureToken] cStringUsingEncoding:NSUTF8StringEncoding]);
             [failureMessages_ addObject:[self failureMessageForExample:example]];
@@ -143,9 +159,15 @@
 - (void)printStats {
     printf("\nFinished in %.4f seconds\n\n", [[NSDate date] timeIntervalSinceDate:startTime_]);
     printf("%u examples, %u failures", exampleCount_, (unsigned int)failureMessages_.count);
+
     if (pendingMessages_.count) {
         printf(", %u pending", (unsigned int)pendingMessages_.count);
     }
+
+    if (skippedMessages_.count) {
+        printf(", %u skipped", (unsigned int)skippedMessages_.count);
+    }
+
     printf("\n");
 }
 
