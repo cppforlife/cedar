@@ -1,6 +1,7 @@
 PROJECT_NAME = "Cedar"
 CONFIGURATION = "Release"
 SPECS_TARGET_NAME = "Specs"
+FOCUSED_SPECS_TARGET_NAME = "FocusedSpecs"
 UI_SPECS_TARGET_NAME = "iPhoneSpecs"
 SDK_DIR = "/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator4.3.sdk"
 BUILD_DIR = File.join(File.dirname(__FILE__), "build")
@@ -28,11 +29,12 @@ def output_file(target)
   output_file
 end
 
-task :default => [:trim_whitespace, :specs, :uispecs]
+task :default => [:trim_whitespace, :specs, :focused_specs, :uispecs]
 task :cruise do
   Rake::Task[:clean].invoke
   Rake::Task[:build_all].invoke
   Rake::Task[:specs].invoke
+  Rake::Task[:focused_specs].invoke
   Rake::Task[:uispecs].invoke
 end
 
@@ -45,8 +47,12 @@ task :clean do
 end
 
 task :build_specs do
-puts "SYMROOT: #{ENV['SYMROOT']}"
+  puts "SYMROOT: #{ENV['SYMROOT']}"
   system_or_exit(%Q[xcodebuild -project #{PROJECT_NAME}.xcodeproj -target #{SPECS_TARGET_NAME} -configuration #{CONFIGURATION} build SYMROOT=#{BUILD_DIR}], output_file("specs"))
+end
+
+task :build_focused_specs do
+  system_or_exit(%Q[xcodebuild -project #{PROJECT_NAME}.xcodeproj -target #{FOCUSED_SPECS_TARGET_NAME} -configuration #{CONFIGURATION} build SYMROOT=#{BUILD_DIR}], output_file("focused_specs"))
 end
 
 task :build_uispecs do
@@ -63,6 +69,13 @@ task :specs => :build_specs do
   ENV["DYLD_FRAMEWORK_PATH"] = build_dir
   ENV["CEDAR_REPORTER_CLASS"] = "CDRColorizedReporter"
   system_or_exit(File.join(build_dir, SPECS_TARGET_NAME))
+end
+
+task :focused_specs => :build_focused_specs do
+  build_dir = build_dir("")
+  ENV["DYLD_FRAMEWORK_PATH"] = build_dir
+  ENV["CEDAR_REPORTER_CLASS"] = "CDRColorizedReporter"
+  system_or_exit(File.join(build_dir, FOCUSED_SPECS_TARGET_NAME))
 end
 
 require 'tmpdir'
