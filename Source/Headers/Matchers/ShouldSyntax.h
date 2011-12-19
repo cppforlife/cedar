@@ -5,6 +5,8 @@ namespace Cedar { namespace Matchers {
     struct ActualValueMarker {
         const char *fileName;
         int lineNumber;
+        
+        inline ActualValueMarker(const char *f, int ln) : fileName(f), lineNumber(ln) {}
     };
 
     template<typename T>
@@ -22,9 +24,16 @@ namespace Cedar { namespace Matchers {
         matchProxy(matcher);
     }
 
+    inline const ActualValueMarker foo(const ActualValueMarker &avm) {
+        return *(&avm);
+    }
 }}
 
+#define CONCATENATE_DIRECT(s1, s2) s1##s2
+#define CONCATENATE(s1, s2) CONCATENATE_DIRECT(s1, s2)
+#define ANONYMOUS_VARIABLE(str) CONCATENATE(str, __LINE__)
+
 #ifndef CEDAR_MATCHERS_DISALLOW_SHOULD
-    #define should ,(ActualValueMarker){__FILE__, __LINE__},false,
+    #define should ,ActualValueMarker(__FILE__, __LINE__),false,
     #define should_not ,(ActualValueMarker){__FILE__, __LINE__},true,
 #endif
