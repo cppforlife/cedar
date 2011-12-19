@@ -1,10 +1,6 @@
 #import "Receive.h"
 #import <Foundation/Foundation.h>
 
-@interface NSInvocation (CDRPrivate)
-+ (NSInvocation *)invocationWithMethodSignature:(NSMethodSignature *)signature arguments:(void *)arguments;
-@end
-
 @interface CDRFakeOCMockObject
 + (id)partialMockForObject:(id)obj;
 - (id)expect;
@@ -16,9 +12,9 @@ static NSMutableArray *receiverObjs__ = nil;
 @implementation CDRReceiverObj
 
 - (void)dealloc {
-    [object_ release];
     [mock_ release];
-    if (hasArguments_) va_end(arguments_); // balances va_copy in setArguments:
+    [object_ release];
+    [arguments_ release];
     [super dealloc];
 }
 
@@ -31,17 +27,9 @@ static NSMutableArray *receiverObjs__ = nil;
     selector_ = selector;
 }
 
-- (void)setArguments:(va_list)arguments {
-    if (hasArguments_)
-        va_end(arguments_);
-    
-    hasArguments_ = YES;
-    va_copy(arguments_, arguments);
-}
-
-- (void)setAs:(NSArray *)as {
-    hasArguments_ = YES;
-    as_ = [as retain];
+- (void)setArguments:(NSArray *)arguments {
+    [arguments_ release];
+    arguments_ = [arguments retain];
 }
 
 - (void)construct {
@@ -50,42 +38,38 @@ static NSMutableArray *receiverObjs__ = nil;
     NSAssert(selector_, @"Selector should be set.");
 
     NSInvocation *invocation = nil;
-    if (hasArguments_) {
+    if (arguments_) {
         NSMethodSignature *signature = [object_ methodSignatureForSelector:selector_];
         invocation = [NSInvocation invocationWithMethodSignature:signature];
         invocation.selector = selector_;
-        
+
         for (int i=2; i<signature.numberOfArguments; i++) {
             void *arg;
-            [[as_ objectAtIndex:i-2] getValue:&arg];
+            [[arguments_ objectAtIndex:i-2] getValue:&arg];
             [invocation setArgument:&arg atIndex:i];
         }
-
-//        http://blog.jayway.com/2010/03/30/performing-any-selector-on-the-main-thread/
-//        char *args = (char *)arguments_;
-//        for (int i=2; i<signature.numberOfArguments; i++) {
-//            const char *type = [signature getArgumentTypeAtIndex:i];
-//            
-//            NSUInteger size, align;
-//            NSGetSizeAndAlignment(type, &size, &align);
-//            
-//            NSUInteger mod = (NSUInteger)args % align;
-//            if (mod != 0) args += align - mod;
-//            
-//            [invocation setArgument:args atIndex:i];
-//            args += size;
-//        }
     } else {
+        // Tricks OCMock to compare based on selector ignoring all arguments
         NSMethodSignature *signature = [NSMethodSignature signatureWithObjCTypes:"v@:"]; // (void)id,SEL
         invocation = [NSInvocation invocationWithMethodSignature:signature];
         invocation.selector = selector_;
     }
 
-    mock_ = [[NSClassFromString(@"OCMockObject") partialMockForObject:object_] retain];
-    [[mock_ expect] forwardInvocation:invocation];
-
-    if (!receiverObjs__) 
+    if (!receiverObjs__)
         receiverObjs__ = [[NSMutableArray alloc] init];
+
+    // Reuse previously created mock object for this target object
+    for (CDRReceiverObj *receiverObj in receiverObjs__) {
+        if (receiverObj->object_ == object_) {
+            mock_ = [receiverObj->mock_ retain];
+            break;
+        }
+    }
+
+    if (!mock_)
+        mock_ = [[NSClassFromString(@"OCMockObject") partialMockForObject:object_] retain];
+
+    [[mock_ expect] forwardInvocation:invocation];
     [receiverObjs__ addObject:self];
 }
 
@@ -97,7 +81,7 @@ static NSMutableArray *receiverObjs__ = nil;
     for (CDRReceiverObj *receiverObj in receiverObjs__) {
         [receiverObj verify];
     }
-    
+
     [receiverObjs__ release];
     receiverObjs__ = nil;
 }
