@@ -38,6 +38,13 @@ describe(@"expecting method calls in specific order", ^{
             });
         });
 
+        it(@"should fail if methods are called out of order", ^{
+            expectReceiveFails(@"unexpected method invoked: callWithArg:\n\texpected:\tcallWithoutArgs", ^{ // MENTION ORDER?
+                [obj callWithArg:obj];
+                [obj callWithoutArgs];
+            });
+        });
+
         it(@"should fail correctly", PENDING);
     });
 });

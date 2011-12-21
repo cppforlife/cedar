@@ -26,12 +26,8 @@ describe(@"expecting method calls without matching by arguments", ^{
     });
 
     it(@"should not fail if other failure occurred", ^{
-        expectFailureWithMessage(@"Expected <2> to equal <3>", ^{
-            expectReceivePasses(^{
-                obj should receive("callWithoutArgs");
-                2 should equal(3);
-            });
-        });
+        obj should receive("callWithoutArgs");
+        2 should equal(3);
     });
 
     context(@"when expecting single call without arguments", ^{
