@@ -55,26 +55,41 @@ const CDRSpecBlock PENDING = nil;
         self.state = CDRExampleStateSkipped;
     } else if (block_) {
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
+        CDRSpecFailure *failure = nil;
+        CDRExampleState state = CDRExampleStatePassed;
+
         @try {
             [parent_ setUp];
             block_();
-            self.state = CDRExampleStatePassed;
         } @catch (CDRSpecFailure *x) {
-            self.failure = x;
-            self.state = CDRExampleStateFailed;
+            failure = x;
+            state = CDRExampleStateFailed;
         } @catch (NSObject *x) {
-            self.failure = [CDRSpecFailure specFailureWithRaisedObject:x];
-            self.state = CDRExampleStateError;
+            failure = [CDRSpecFailure specFailureWithRaisedObject:x];
+            state = CDRExampleStateError;
         }
+
+        // Only report failures while tearing down
+        // if there were no problems running example.
         @try {
             [parent_ tearDown];
         } @catch (CDRSpecFailure *x) {
-            self.failure = x;
-            self.state = CDRExampleStateFailed;
+            if (state == CDRExampleStatePassed) {
+                failure = x;
+                state = CDRExampleStateFailed;
+            }
         } @catch (NSObject *x) {
-            self.failure = [CDRSpecFailure specFailureWithRaisedObject:x];
-            self.state = CDRExampleStateError;
+            if (state == CDRExampleStatePassed) {
+                failure = [CDRSpecFailure specFailureWithRaisedObject:x];
+                state = CDRExampleStateError;
+            }
         }
+
+        // Change state only once!
+        self.failure = failure;
+        self.state = state;
+
         [pool drain];
     } else {
         self.state = CDRExampleStatePending;

@@ -3,8 +3,11 @@
 
 @implementation MyObj
 - (void)callWithoutArgs {}
+- (void)callWithoutArgs2 {}
+
 - (void)callWithArg:(id)arg {}
 - (void)callWithArg2:(id)arg {}
+
 - (void)callWithArg:(id)arg arg:(id)arg2 {}
 - (void)callWithArg2:(id)arg arg:(id)arg2 {}
 
@@ -32,18 +35,26 @@ void expectReceivePasses(CDRSpecBlock block) {
 };
 
 void expectReceiveFails(NSString *containedFailureReason, CDRSpecBlock block) {
-    block();
+    id failure = nil;
+    @try {
+        block();
+    } @catch (id x) {
+        failure = x;
+    }
 
-    BOOL failed = NO;
     @try {
         [NSClassFromString(@"CDRReceiverObj") afterEach];
     } @catch (id x) {
-        failed = YES;
-        if (![x description] || [[x description] rangeOfString:containedFailureReason].location == NSNotFound) {
-            NSString *failure = [NSString stringWithFormat:@"Expectation should have raised an exception with '%@' but was '%@'", containedFailureReason, [x description]];
-            fail(failure);
-        }
+        if (!failure) failure = x;
     }
 
-    if (!failed) fail(@"Expectation should have raised an exception.");
+    if (!failure) {
+        fail(@"Expectation should have raised an exception.");
+    } else {
+        if (![failure description] || [[failure description] rangeOfString:containedFailureReason].location == NSNotFound) {
+            fail([NSString stringWithFormat:
+                    @"Expectation should have raised an exception with '%@' but was '%@'",
+                    containedFailureReason, [failure description]]);
+        }
+    }
 };

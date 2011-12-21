@@ -5,6 +5,7 @@ void expectReceiveFails(NSString *containedFailureReason, CDRSpecBlock block);
 
 @interface MyObj : NSObject
 - (void)callWithoutArgs;
+- (void)callWithoutArgs2;
 - (void)callWithArg:(id)arg;
 - (void)callWithArg2:(id)arg;
 - (void)callWithArg:(id)arg arg:(id)arg2;

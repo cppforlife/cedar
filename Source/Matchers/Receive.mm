@@ -2,6 +2,9 @@
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
 
+static BOOL raisedReceiveFailure = NO;
+static NSMutableArray *receiverObjs__ = nil;
+
 @interface CDRMethodsBag
 + (id)initWithObject:(id)anObject;
 + (id/*OCPartialMockObject*/)existingPartialMockForObject:(id)anObject;
@@ -20,18 +23,23 @@
 
 @implementation CDRCustomPartialMockObjectMethodsBag
 - (void)forwardInvocationForRealObject:(NSInvocation *)anInvocation {
+    raisedReceiveFailure = YES;
+
     id /*OCPartialMockObject*/ mock = [NSClassFromString(@"OCPartialMockObject") existingPartialMockForObject:self];
     if([mock handleInvocation:anInvocation] == NO) {
         // Call out to mock's realObject implementation.
         // This avoids well known 'Ended up in subclass forwarder...' error
-        anInvocation.selector = NSSelectorFromString([@"ocmock_replaced_" stringByAppendingString:NSStringFromSelector(anInvocation.selector)]);
-        [anInvocation invokeWithTarget:self];
+        // anInvocation.selector = NSSelectorFromString([@"ocmock_replaced_" stringByAppendingString:NSStringFromSelector(anInvocation.selector)]);
+        // [anInvocation invokeWithTarget:self];
+        [NSException raise:NSInternalInconsistencyException format:
+            @"Unexpected method was invoked %@ on %@",
+            NSStringFromSelector([anInvocation selector]), [self class]];
     }
+
+    raisedReceiveFailure = NO;
 }
 @end
 
-
-static NSMutableArray *receiverObjs__ = nil;
 
 @implementation CDRReceiverObj
 
@@ -142,15 +150,24 @@ static NSMutableArray *receiverObjs__ = nil;
     [mock_ verify];
 }
 
+// Cedar hooks to run before and after every example
++ (void)beforeEach {
+    raisedReceiveFailure = NO;
+}
+
 + (void)afterEach {
     CDRSpecFailure *failure = nil;
 
-    for (CDRReceiverObj *receiverObj in receiverObjs__) {
-        @try {
-            [receiverObj verify];
-        } @catch (id x) {
-            failure = [CDRSpecFailure specFailureWithRaisedObject:x];
-            break;
+    // Do not raise an error even if we have some if
+    // there previous receive errors were already raised
+    if (!raisedReceiveFailure) {
+        for (CDRReceiverObj *receiverObj in receiverObjs__) {
+            @try {
+                [receiverObj verify];
+            } @catch (id x) {
+                failure = [CDRSpecFailure specFailureWithRaisedObject:x];
+                break;
+            }
         }
     }
 
@@ -159,5 +176,4 @@ static NSMutableArray *receiverObjs__ = nil;
 
     [failure raise];
 }
-
 @end

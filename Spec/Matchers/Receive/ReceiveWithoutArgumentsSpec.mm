@@ -11,6 +11,7 @@
 
 extern "C" {
 #import "ReceiveSpecHelper.h"
+#import "ExpectFailureWithMessage.h"
 }
 
 using namespace Cedar::Matchers;
@@ -24,6 +25,15 @@ describe(@"expecting method calls without matching by arguments", ^{
         obj = [[[MyObj alloc] init] autorelease];
     });
 
+    it(@"should not fail if other failure occurred", ^{
+        expectFailureWithMessage(@"Expected <2> to equal <3>", ^{
+            expectReceivePasses(^{
+                obj should receive("callWithoutArgs");
+                2 should equal(3);
+            });
+        });
+    });
+
     context(@"when expecting single call without arguments", ^{
         beforeEach(^{
             obj should receive("callWithoutArgs");
@@ -33,14 +43,20 @@ describe(@"expecting method calls without matching by arguments", ^{
             expectReceiveFails(@"expected method was not invoked", ^{});
         });
 
+        it(@"should fail if method is not called and some other method was called", ^{
+            expectReceiveFails(@"expected method was not invoked", ^{
+                [obj callWithoutArgs2];
+            });
+        });
+
         it(@"should pass if method is called once", ^{
             expectReceivePasses(^{
                 [obj callWithoutArgs];
             });
         });
 
-        it(@"should pass if method is called multiple times", ^{
-            expectReceivePasses(^{
+        it(@"should fail if method is called more than once", ^{
+            expectReceiveFails(@"Unexpected method was invoked", ^{
                 [obj callWithoutArgs];
                 [obj callWithoutArgs];
             });
@@ -56,14 +72,20 @@ describe(@"expecting method calls without matching by arguments", ^{
             expectReceiveFails(@"expected method was not invoked", ^{});
         });
 
+        it(@"should fail if method is not called and some other method was called", ^{
+            expectReceiveFails(@"expected method was not invoked", ^{
+                [obj callWithArg2:obj];
+            });
+        });
+
         it(@"should pass if method is called once", ^{
             expectReceivePasses(^{
                 [obj callWithArg:obj];
             });
         });
 
-        it(@"should pass if method is called multiple times", ^{
-            expectReceivePasses(^{
+        it(@"should fail if method is called more than once", ^{
+            expectReceiveFails(@"Unexpected method was invoked", ^{
                 [obj callWithArg:obj];
                 [obj callWithArg:obj];
             });
@@ -93,8 +115,8 @@ describe(@"expecting method calls without matching by arguments", ^{
             });
         });
 
-        it(@"should pass if method is called more than expected number of times", ^{
-            expectReceivePasses(^{
+        it(@"should fail if method is called more than expected number of times", ^{
+            expectReceiveFails(@"Unexpected method was invoked", ^{
                 [obj callWithArg:obj];
                 [obj callWithArg:obj];
                 [obj callWithArg:obj];
@@ -128,8 +150,8 @@ describe(@"expecting method calls without matching by arguments", ^{
             });
         });
 
-        it(@"should pass if one of the methods is called more than expected number of times", ^{
-            expectReceivePasses(^{
+        it(@"should fail if one of the methods is called more than expected number of times", ^{
+            expectReceiveFails(@"Unexpected method was invoked", ^{
                 [obj callWithoutArgs];
                 [obj callWithArg:obj];
                 [obj callWithArg:obj];

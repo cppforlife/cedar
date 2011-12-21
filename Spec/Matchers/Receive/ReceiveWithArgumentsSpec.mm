@@ -34,6 +34,12 @@ describe(@"expecting method calls with matching by arguments", ^{
             expectReceiveFails(@"expected method was not invoked", ^{});
         });
 
+        it(@"should fail if method is not called and some other method was called", ^{
+            expectReceiveFails(@"expected method was not invoked", ^{
+                [obj callWithArg2:obj];
+            });
+        });
+
         it(@"should pass if method is called once", ^{
             expectReceivePasses(^{
                 [obj callWithArg:obj];
@@ -41,21 +47,14 @@ describe(@"expecting method calls with matching by arguments", ^{
         });
 
         it(@"should fail if method is called with non-matching arguments", ^{
-            expectReceiveFails(@"expected method was not invoked", ^{
+            expectReceiveFails(@"Unexpected method was invoked", ^{
                 [obj callWithArg:obj2];
             });
         });
 
-        it(@"should pass if method is called multiple times", ^{
-            expectReceivePasses(^{
+        it(@"should fail if method is called more than once", ^{
+            expectReceiveFails(@"Unexpected method was invoked", ^{
                 [obj callWithArg:obj];
-                [obj callWithArg:obj];
-            });
-        });
-
-        it(@"should pass if method is called multiple times with matching arguments and non-matching arguments", ^{
-            expectReceivePasses(^{
-                [obj callWithArg:obj2];
                 [obj callWithArg:obj];
             });
         });
@@ -84,17 +83,9 @@ describe(@"expecting method calls with matching by arguments", ^{
             });
         });
 
-        it(@"should pass if method is called more than expected number of times", ^{
-            expectReceivePasses(^{
+        it(@"should fail if method is called more than expected number of times", ^{
+            expectReceiveFails(@"Unexpected method was invoked", ^{
                 [obj callWithArg:obj];
-                [obj callWithArg:obj];
-                [obj callWithArg:obj];
-            });
-        });
-
-        it(@"should pass if method is called more than expected number of times with matching and non-matching arguments", ^{
-            expectReceivePasses(^{
-                [obj callWithArg:obj2];
                 [obj callWithArg:obj];
                 [obj callWithArg:obj];
             });
@@ -118,7 +109,7 @@ describe(@"expecting method calls with matching by arguments", ^{
         });
 
         it(@"should fail if method is called expected number of times but not satisfying all argument expectations", ^{
-            expectReceiveFails(@"expected method was not invoked", ^{
+            expectReceiveFails(@"Unexpected method was invoked", ^{
                 [obj callWithArg:obj];
                 [obj callWithArg:obj];
             });
@@ -138,8 +129,8 @@ describe(@"expecting method calls with matching by arguments", ^{
             });
         });
 
-        it(@"should pass if method is called more than expected number of times", ^{
-            expectReceivePasses(^{
+        it(@"should fail if method is called more than expected number of times", ^{
+            expectReceiveFails(@"Unexpected method was invoked", ^{
                 [obj callWithArg:obj];
                 [obj callWithArg:obj];
                 [obj callWithArg:obj2];
@@ -160,7 +151,7 @@ describe(@"expecting method calls with matching by arguments", ^{
         });
 
         it(@"should fail if both methods are called but not satisfying all argument expectations", ^{
-            expectReceiveFails(@"expected method was not invoked", ^{
+            expectReceiveFails(@"Unexpected method was invoked", ^{
                 [obj callWithArg:obj];
                 [obj callWithArg2:obj];
             });
@@ -180,8 +171,8 @@ describe(@"expecting method calls with matching by arguments", ^{
             });
         });
 
-        it(@"should pass if one of the methods is called more than expected number of times", ^{
-            expectReceivePasses(^{
+        it(@"should fail if one of the methods is called more than expected number of times", ^{
+            expectReceiveFails(@"Unexpected method was invoked", ^{
                 [obj callWithArg2:obj2];
                 [obj callWithArg:obj];
                 [obj callWithArg:obj];
