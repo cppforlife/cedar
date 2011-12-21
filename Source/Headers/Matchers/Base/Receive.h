@@ -17,18 +17,22 @@
 @interface CDRReceiverObj : NSObject {
     id mock_;
     id object_;
+
     SEL selector_;
     NSArray *arguments_;
 
     BOOL returnValueSet_;
     BOOL returnValueAsObject_;
     id returnValue_;
+
+    BOOL orderMatters_;
 }
 
 - (void)setObject:(id)object;
 - (void)setSelector:(SEL)selector;
 - (void)setArguments:(NSArray *)arguments;
 - (void)setReturnValue:(NSValue *)returnValue asObject:(BOOL)asObject;
+- (void)setOrderMatters:(BOOL)orderMatters;
 
 - (void)construct;
 - (void)verify;
@@ -59,6 +63,8 @@ namespace Cedar { namespace Matchers {
         Receive & and_return(const double &);
         Receive & and_return(const float &);
         Receive & and_return(const char &);
+
+        Receive & ordered();
 
         template<typename U>
         bool matches(const U &) const;
@@ -141,6 +147,12 @@ namespace Cedar { namespace Matchers {
 
     inline Receive & Receive::and_return(const char & returnValue) {
         [this->receiver_obj setReturnValue:[NSNumber numberWithChar:returnValue] asObject:NO];
+        return *this;
+    }
+
+#pragma mark Ordering
+    inline Receive & Receive::ordered() {
+        [this->receiver_obj setOrderMatters:YES];
         return *this;
     }
 

@@ -10,6 +10,8 @@
 
 - (id)andReturn:(id)anObject;
 - (id)andReturnValue:(NSValue *)aValue;
+
+- (void)setExpectationOrderMatters:(BOOL)flag;
 @end
 
 // Holds methods for CDRCustomPartialMockObject class that is a subclass of OCPartialMockObject
@@ -60,6 +62,10 @@ static NSMutableArray *receiverObjs__ = nil;
     returnValue_ = [returnValue retain];
     returnValueSet_ = YES;
     returnValueAsObject_ = asObject;
+}
+
+- (void)setOrderMatters:(BOOL)orderMatters {
+    orderMatters_ = orderMatters;
 }
 
 - (void)construct {
@@ -128,6 +134,7 @@ static NSMutableArray *receiverObjs__ = nil;
         [[mock_ expect] forwardInvocation:invocation];
     }
 
+    [mock_ setExpectationOrderMatters:orderMatters_];
     [receiverObjs__ addObject:self];
 }
 
