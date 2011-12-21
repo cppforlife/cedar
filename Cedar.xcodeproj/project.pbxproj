@@ -40,6 +40,7 @@
 		9637852F1491D84F0059C9F6 /* CDROTestHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 9637852D1491D84F0059C9F6 /* CDROTestHelper.h */; };
 		966E74ED145A6CA0002E8D49 /* ShouldSyntaxSpec.mm in Sources */ = {isa = PBXBuildFile; fileRef = 966E74EC145A6CA0002E8D49 /* ShouldSyntaxSpec.mm */; };
 		966E74EE145A6CA0002E8D49 /* ShouldSyntaxSpec.mm in Sources */ = {isa = PBXBuildFile; fileRef = 966E74EC145A6CA0002E8D49 /* ShouldSyntaxSpec.mm */; };
+		968B8BF814A1C8BB00E1A0F8 /* ReceiveAndReturnSpec.mm in Sources */ = {isa = PBXBuildFile; fileRef = 968B8BF714A1C8BB00E1A0F8 /* ReceiveAndReturnSpec.mm */; };
 		968BA92F143485F800EA40B3 /* CDROTestIPhoneRunner.h in Headers */ = {isa = PBXBuildFile; fileRef = 968BA92E143485F800EA40B3 /* CDROTestIPhoneRunner.h */; };
 		96A07F0313F276640021974D /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE135D3111DEA6A900A922D4 /* OCMock.framework */; };
 		96A07F0413F276640021974D /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEEE1FB611DC271300029872 /* Cedar.framework */; };
@@ -385,6 +386,7 @@
 		9637852A1491D6D30059C9F6 /* CDROTestHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDROTestHelper.m; sourceTree = "<group>"; };
 		9637852D1491D84F0059C9F6 /* CDROTestHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDROTestHelper.h; sourceTree = "<group>"; };
 		966E74EC145A6CA0002E8D49 /* ShouldSyntaxSpec.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ShouldSyntaxSpec.mm; path = ../ShouldSyntaxSpec.mm; sourceTree = "<group>"; };
+		968B8BF714A1C8BB00E1A0F8 /* ReceiveAndReturnSpec.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ReceiveAndReturnSpec.mm; sourceTree = "<group>"; };
 		968BA92E143485F800EA40B3 /* CDROTestIPhoneRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDROTestIPhoneRunner.h; sourceTree = "<group>"; };
 		96A07F0813F276640021974D /* FocusedSpecs */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FocusedSpecs; sourceTree = BUILT_PRODUCTS_DIR; };
 		96A07F0A13F276B10021974D /* FocusedSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FocusedSpec.m; path = Focused/FocusedSpec.m; sourceTree = "<group>"; };
@@ -692,6 +694,7 @@
 				96CB41D114A047D500EB9921 /* ReceiveSpecHelper.m */,
 				96CB41CE14A047A700EB9921 /* ReceiveWithoutArgumentsSpec.mm */,
 				96FE6DAF14A04CF30046116A /* ReceiveWithArgumentsSpec.mm */,
+				968B8BF714A1C8BB00E1A0F8 /* ReceiveAndReturnSpec.mm */,
 			);
 			path = Receive;
 			sourceTree = "<group>";
@@ -1452,6 +1455,7 @@
 				96CB41CF14A047A700EB9921 /* ReceiveWithoutArgumentsSpec.mm in Sources */,
 				96CB41D214A047D500EB9921 /* ReceiveSpecHelper.m in Sources */,
 				96FE6DB014A04CF30046116A /* ReceiveWithArgumentsSpec.mm in Sources */,
+				968B8BF814A1C8BB00E1A0F8 /* ReceiveAndReturnSpec.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -19,11 +19,16 @@
     id object_;
     SEL selector_;
     NSArray *arguments_;
+
+    BOOL returnValueSet_;
+    BOOL returnValueAsObject_;
+    id returnValue_;
 }
 
 - (void)setObject:(id)object;
 - (void)setSelector:(SEL)selector;
 - (void)setArguments:(NSArray *)arguments;
+- (void)setReturnValue:(NSValue *)returnValue asObject:(BOOL)asObject;
 
 - (void)construct;
 - (void)verify;
@@ -44,6 +49,16 @@ namespace Cedar { namespace Matchers {
         inline ~Receive() {
             [this->receiver_obj release]; // balances retain in constructor
         }
+
+        template<typename U>
+        Receive & and_return(const U &);
+        Receive & and_return(const id &);
+        Receive & and_return(const int &);
+        Receive & and_return(const long &);
+        Receive & and_return(const BOOL &);
+        Receive & and_return(const double &);
+        Receive & and_return(const float &);
+        Receive & and_return(const char &);
 
         template<typename U>
         bool matches(const U &) const;
@@ -85,6 +100,48 @@ namespace Cedar { namespace Matchers {
 
     inline Receive receive(SEL selector) {
         return Receive(selector);
+    }
+
+#pragma mark Returning values
+    template<typename U>
+    Receive & Receive::and_return(const U & returnValue) {
+        if (@encode(U)[0] == '@') {
+            [this->receiver_obj setReturnValue:reinterpret_cast<const id &>(returnValue) asObject:YES];
+        } else {
+            [this->receiver_obj setReturnValue:[NSValue value:returnValue withObjCType:@encode(U)] asObject:NO];
+        }
+        return *this;
+    }
+
+    inline Receive & Receive::and_return(const int & returnValue) {
+        [this->receiver_obj setReturnValue:[NSNumber numberWithInt:returnValue] asObject:NO];
+        return *this;
+    }
+
+    // This overload also takes care of 'nil'
+    inline Receive & Receive::and_return(const long & returnValue) {
+        [this->receiver_obj setReturnValue:[NSNumber numberWithLong:returnValue] asObject:NO];
+        return *this;
+    }
+
+    inline Receive & Receive::and_return(const BOOL & returnValue) {
+        [this->receiver_obj setReturnValue:[NSNumber numberWithBool:returnValue] asObject:NO];
+        return *this;
+    }
+
+    inline Receive & Receive::and_return(const double & returnValue) {
+        [this->receiver_obj setReturnValue:[NSNumber numberWithDouble:returnValue] asObject:NO];
+        return *this;
+    }
+
+    inline Receive & Receive::and_return(const float & returnValue) {
+        [this->receiver_obj setReturnValue:[NSNumber numberWithFloat:returnValue] asObject:NO];
+        return *this;
+    }
+
+    inline Receive & Receive::and_return(const char & returnValue) {
+        [this->receiver_obj setReturnValue:[NSNumber numberWithChar:returnValue] asObject:NO];
+        return *this;
     }
 
 #pragma mark Generic

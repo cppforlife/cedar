@@ -7,6 +7,14 @@
 - (void)callWithArg2:(id)arg {}
 - (void)callWithArg:(id)arg arg:(id)arg2 {}
 - (void)callWithArg2:(id)arg arg:(id)arg2 {}
+
+- (id)returnId { return self; }
+- (MyObj *)returnMyObj {return self; }
+- (int)returnInt { return -1; }
+- (BOOL)returnBool { return YES; }
+- (double)returnDouble { return -2.5f; }
+- (float)returnFloat { return -2.5f; }
+- (char)returnChar { return 'a'; }
 @end
 
 @interface Dude

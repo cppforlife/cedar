@@ -7,6 +7,9 @@
 + (id/*OCPartialMockObject*/)existingPartialMockForObject:(id)anObject;
 - (BOOL)handleInvocation:(NSInvocation *)anInvocation;
 - (id)expect;
+
+- (id)andReturn:(id)anObject;
+- (id)andReturnValue:(NSValue *)aValue;
 @end
 
 // Holds methods for CDRCustomPartialMockObject class that is a subclass of OCPartialMockObject
@@ -34,6 +37,7 @@ static NSMutableArray *receiverObjs__ = nil;
     [mock_ release];
     [object_ release];
     [arguments_ release];
+    [returnValue_ release];
     [super dealloc];
 }
 
@@ -49,6 +53,13 @@ static NSMutableArray *receiverObjs__ = nil;
 - (void)setArguments:(NSArray *)arguments {
     [arguments_ release];
     arguments_ = [arguments retain];
+}
+
+- (void)setReturnValue:(id)returnValue asObject:(BOOL)asObject {
+    [returnValue_ release];
+    returnValue_ = [returnValue retain];
+    returnValueSet_ = YES;
+    returnValueAsObject_ = asObject;
 }
 
 - (void)construct {
@@ -97,7 +108,26 @@ static NSMutableArray *receiverObjs__ = nil;
         class_replaceMethod([object_ class], @selector(forwardInvocation:), forwardInvocationImp, forwardInvocationTypes);
     }
 
-    [[mock_ expect] forwardInvocation:invocation];
+    if (returnValueSet_) {
+        if (returnValueAsObject_) {
+            [[[mock_ expect] andReturn:returnValue_] forwardInvocation:invocation];
+        } else {
+            NSMethodSignature *signature = [object_ methodSignatureForSelector:selector_];
+            BOOL tryingToReturnNil =
+                signature.methodReturnType[0] == '@' &&
+                [returnValue_ objCType][0] == 'i' &&
+                [returnValue_ pointerValue] == 0;
+
+            if (tryingToReturnNil) {
+                [[[mock_ expect] andReturn:nil] forwardInvocation:invocation];
+            } else {
+                [[[mock_ expect] andReturnValue:returnValue_] forwardInvocation:invocation];
+            }
+        }
+    } else {
+        [[mock_ expect] forwardInvocation:invocation];
+    }
+
     [receiverObjs__ addObject:self];
 }
 
