@@ -55,6 +55,9 @@
 		96B5FA12144A81A8000A6A5D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96B5F9F8144A81A7000A6A5D /* UIKit.framework */; };
 		96B5FA14144A81A8000A6A5D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96B5F9FB144A81A7000A6A5D /* CoreGraphics.framework */; };
 		96B5FA1C144A81A8000A6A5D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 96B5FA1A144A81A8000A6A5D /* InfoPlist.strings */; };
+		96CB41CF14A047A700EB9921 /* ReceiveWithoutArgumentsSpec.mm in Sources */ = {isa = PBXBuildFile; fileRef = 96CB41CE14A047A700EB9921 /* ReceiveWithoutArgumentsSpec.mm */; };
+		96CB41D214A047D500EB9921 /* ReceiveSpecHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CB41D114A047D500EB9921 /* ReceiveSpecHelper.m */; };
+		96CB41D314A0495B00EB9921 /* Receive.h in Copy headers to framework */ = {isa = PBXBuildFile; fileRef = 96FF3E851499D16900A62B93 /* Receive.h */; };
 		96D34482144A82DB00352C4A /* DummyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96D3447F144A82D100352C4A /* DummyView.xib */; };
 		96D34485144A845600352C4A /* OCUnitApplicationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 96D34483144A845100352C4A /* OCUnitApplicationTests.mm */; };
 		96D3448A144A85A500352C4A /* libCedar-StaticLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AEEE222911DC2B0600029872 /* libCedar-StaticLib.a */; };
@@ -68,9 +71,8 @@
 		96EA1CB0142C6449001A78E0 /* CDROTestRunner.h in Headers */ = {isa = PBXBuildFile; fileRef = 96EA1CAD142C6449001A78E0 /* CDROTestRunner.h */; };
 		96EA1CBA142C6560001A78E0 /* CDRSpecFailureSpec.mm in Sources */ = {isa = PBXBuildFile; fileRef = 96EA1CB9142C6560001A78E0 /* CDRSpecFailureSpec.mm */; };
 		96EA1CBB142C6560001A78E0 /* CDRSpecFailureSpec.mm in Sources */ = {isa = PBXBuildFile; fileRef = 96EA1CB9142C6560001A78E0 /* CDRSpecFailureSpec.mm */; };
-		96FF3E831499D03700A62B93 /* ExpectSpec.mm in Sources */ = {isa = PBXBuildFile; fileRef = 96FF3E821499D03700A62B93 /* ExpectSpec.mm */; };
-		96FF3E861499D16900A62B93 /* Receive.h in Headers */ = {isa = PBXBuildFile; fileRef = 96FF3E851499D16900A62B93 /* Receive.h */; };
-		96FF3E871499D16900A62B93 /* Receive.h in Headers */ = {isa = PBXBuildFile; fileRef = 96FF3E851499D16900A62B93 /* Receive.h */; };
+		96FE6DB014A04CF30046116A /* ReceiveWithArgumentsSpec.mm in Sources */ = {isa = PBXBuildFile; fileRef = 96FE6DAF14A04CF30046116A /* ReceiveWithArgumentsSpec.mm */; };
+		96FF3E861499D16900A62B93 /* Receive.h in Headers */ = {isa = PBXBuildFile; fileRef = 96FF3E851499D16900A62B93 /* Receive.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		96FF3E891499D6FF00A62B93 /* Receive.mm in Sources */ = {isa = PBXBuildFile; fileRef = 96FF3E881499D6FF00A62B93 /* Receive.mm */; };
 		96FF3E8A1499D6FF00A62B93 /* Receive.mm in Sources */ = {isa = PBXBuildFile; fileRef = 96FF3E881499D6FF00A62B93 /* Receive.mm */; };
 		AE0AF56513E9C0E300029396 /* CedarMatchers.h in Headers */ = {isa = PBXBuildFile; fileRef = AE0AF55E13E9C0E300029396 /* CedarMatchers.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -358,6 +360,7 @@
 				AEF33018145B6222002F93BB /* BeLessThan.h in Copy headers to framework */,
 				AEF33022145B69DE002F93BB /* BeLTE.h in Copy headers to framework */,
 				AE84F0DC145B70DD00769F85 /* ShouldSyntax.h in Copy headers to framework */,
+				96CB41D314A0495B00EB9921 /* Receive.h in Copy headers to framework */,
 			);
 			name = "Copy headers to framework";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -401,6 +404,9 @@
 		96B5FA19144A81A8000A6A5D /* OCUnitAppTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "OCUnitAppTests-Info.plist"; sourceTree = "<group>"; };
 		96B5FA1B144A81A8000A6A5D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		96B5FA1D144A81A8000A6A5D /* OCUnitAppTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCUnitAppTests-Prefix.pch"; sourceTree = "<group>"; };
+		96CB41CE14A047A700EB9921 /* ReceiveWithoutArgumentsSpec.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ReceiveWithoutArgumentsSpec.mm; sourceTree = "<group>"; };
+		96CB41D014A047D500EB9921 /* ReceiveSpecHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReceiveSpecHelper.h; sourceTree = "<group>"; };
+		96CB41D114A047D500EB9921 /* ReceiveSpecHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReceiveSpecHelper.m; sourceTree = "<group>"; };
 		96D34480144A82D100352C4A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DummyView.xib; sourceTree = "<group>"; };
 		96D34483144A845100352C4A /* OCUnitApplicationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OCUnitApplicationTests.mm; sourceTree = "<group>"; };
 		96E807BA1491BC7500388D9D /* OCUnitApplicationTestsWithSenTestingKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitApplicationTestsWithSenTestingKit.m; sourceTree = "<group>"; };
@@ -410,7 +416,7 @@
 		96EA1CAC142C6449001A78E0 /* CDROTestReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDROTestReporter.h; sourceTree = "<group>"; };
 		96EA1CAD142C6449001A78E0 /* CDROTestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDROTestRunner.h; sourceTree = "<group>"; };
 		96EA1CB9142C6560001A78E0 /* CDRSpecFailureSpec.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CDRSpecFailureSpec.mm; sourceTree = "<group>"; };
-		96FF3E821499D03700A62B93 /* ExpectSpec.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ExpectSpec.mm; sourceTree = "<group>"; };
+		96FE6DAF14A04CF30046116A /* ReceiveWithArgumentsSpec.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ReceiveWithArgumentsSpec.mm; sourceTree = "<group>"; };
 		96FF3E851499D16900A62B93 /* Receive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Receive.h; sourceTree = "<group>"; };
 		96FF3E881499D6FF00A62B93 /* Receive.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Receive.mm; sourceTree = "<group>"; };
 		AE0AF55E13E9C0E300029396 /* CedarMatchers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CedarMatchers.h; sourceTree = "<group>"; };
@@ -630,7 +636,6 @@
 				96A07F0A13F276B10021974D /* FocusedSpec.m */,
 				96A07F1013F283E40021974D /* FocusedSpec2.m */,
 				96A07F0E13F27F2F0021974D /* main.m */,
-				96FF3E821499D03700A62B93 /* ExpectSpec.mm */,
 			);
 			name = Focused;
 			sourceTree = "<group>";
@@ -678,6 +683,17 @@
 				96B5FA1D144A81A8000A6A5D /* OCUnitAppTests-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		96CB41CD14A0472B00EB9921 /* Receive */ = {
+			isa = PBXGroup;
+			children = (
+				96CB41D014A047D500EB9921 /* ReceiveSpecHelper.h */,
+				96CB41D114A047D500EB9921 /* ReceiveSpecHelper.m */,
+				96CB41CE14A047A700EB9921 /* ReceiveWithoutArgumentsSpec.mm */,
+				96FE6DAF14A04CF30046116A /* ReceiveWithArgumentsSpec.mm */,
+			);
+			path = Receive;
 			sourceTree = "<group>";
 		};
 		AE0AF55D13E9C06900029396 /* Matchers */ = {
@@ -731,6 +747,7 @@
 			children = (
 				AEF7301313ECC4AE00786282 /* Base */,
 				AEF7302913ECC4C100786282 /* Container */,
+				96CB41CD14A0472B00EB9921 /* Receive */,
 				966E74EC145A6CA0002E8D49 /* ShouldSyntaxSpec.mm */,
 				AE8C87AA13624523006C9305 /* ExpectFailureWithMessage.h */,
 				AE8C87AB13624524006C9305 /* ExpectFailureWithMessage.m */,
@@ -1023,7 +1040,6 @@
 				96EA1CAF142C6449001A78E0 /* CDROTestReporter.h in Headers */,
 				968BA92F143485F800EA40B3 /* CDROTestIPhoneRunner.h in Headers */,
 				9637852F1491D84F0059C9F6 /* CDROTestHelper.h in Headers */,
-				96FF3E871499D16900A62B93 /* Receive.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1361,7 +1377,6 @@
 				96A07F0B13F276B10021974D /* FocusedSpec.m in Sources */,
 				96A07F0F13F27F2F0021974D /* main.m in Sources */,
 				96A07F1113F283E40021974D /* FocusedSpec2.m in Sources */,
-				96FF3E831499D03700A62B93 /* ExpectSpec.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1434,6 +1449,9 @@
 				AEF3301C145B62E9002F93BB /* BeLessThanSpec.mm in Sources */,
 				AEF3301E145B68D7002F93BB /* BeLTESpec.mm in Sources */,
 				966E74ED145A6CA0002E8D49 /* ShouldSyntaxSpec.mm in Sources */,
+				96CB41CF14A047A700EB9921 /* ReceiveWithoutArgumentsSpec.mm in Sources */,
+				96CB41D214A047D500EB9921 /* ReceiveSpecHelper.m in Sources */,
+				96FE6DB014A04CF30046116A /* ReceiveWithArgumentsSpec.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

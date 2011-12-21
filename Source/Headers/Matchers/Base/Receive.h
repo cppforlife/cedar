@@ -16,7 +16,6 @@
 
 @interface CDRReceiverObj : NSObject {
     id mock_;
-
     id object_;
     SEL selector_;
     NSArray *arguments_;

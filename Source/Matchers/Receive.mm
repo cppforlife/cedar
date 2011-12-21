@@ -1,9 +1,28 @@
 #import "Receive.h"
 #import <Foundation/Foundation.h>
+#import <objc/runtime.h>
 
-@interface CDRFakeOCMockObject
-+ (id)partialMockForObject:(id)obj;
+@interface CDRMethodsBag
++ (id)initWithObject:(id)anObject;
++ (id/*OCPartialMockObject*/)existingPartialMockForObject:(id)anObject;
+- (BOOL)handleInvocation:(NSInvocation *)anInvocation;
 - (id)expect;
+@end
+
+// Holds methods for CDRCustomPartialMockObject class that is a subclass of OCPartialMockObject
+@interface CDRCustomPartialMockObjectMethodsBag : NSObject
+@end
+
+@implementation CDRCustomPartialMockObjectMethodsBag
+- (void)forwardInvocationForRealObject:(NSInvocation *)anInvocation {
+    id /*OCPartialMockObject*/ mock = [NSClassFromString(@"OCPartialMockObject") existingPartialMockForObject:self];
+    if([mock handleInvocation:anInvocation] == NO) {
+        // Call out to mock's realObject implementation.
+        // This avoids well known 'Ended up in subclass forwarder...' error
+        anInvocation.selector = NSSelectorFromString([@"ocmock_replaced_" stringByAppendingString:NSStringFromSelector(anInvocation.selector)]);
+        [anInvocation invokeWithTarget:self];
+    }
+}
 @end
 
 
@@ -66,8 +85,17 @@ static NSMutableArray *receiverObjs__ = nil;
         }
     }
 
-    if (!mock_)
-        mock_ = [[NSClassFromString(@"OCMockObject") partialMockForObject:object_] retain];
+    if (!mock_) {
+        mock_ = [[NSClassFromString(@"OCPartialMockObject") alloc] initWithObject:object_];
+
+        // Make sure we do not blow up if partial mock object gets called with expected method
+        // but there are no more recorders left to match against (e.g. method called with non-matching args,
+        // method called more than expected number of times)
+        Method forwardInvocationMethod = class_getInstanceMethod([CDRCustomPartialMockObjectMethodsBag class], @selector(forwardInvocationForRealObject:));
+        IMP forwardInvocationImp = method_getImplementation(forwardInvocationMethod);
+        const char *forwardInvocationTypes = method_getTypeEncoding(forwardInvocationMethod);
+        class_replaceMethod([object_ class], @selector(forwardInvocation:), forwardInvocationImp, forwardInvocationTypes);
+    }
 
     [[mock_ expect] forwardInvocation:invocation];
     [receiverObjs__ addObject:self];
@@ -78,12 +106,21 @@ static NSMutableArray *receiverObjs__ = nil;
 }
 
 + (void)afterEach {
+    CDRSpecFailure *failure = nil;
+
     for (CDRReceiverObj *receiverObj in receiverObjs__) {
-        [receiverObj verify];
+        @try {
+            [receiverObj verify];
+        } @catch (id x) {
+            failure = [CDRSpecFailure specFailureWithRaisedObject:x];
+            break;
+        }
     }
 
     [receiverObjs__ release];
     receiverObjs__ = nil;
+
+    [failure raise];
 }
 
 @end
