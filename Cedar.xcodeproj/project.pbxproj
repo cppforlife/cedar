@@ -58,8 +58,13 @@
 		9637852C1491D6D40059C9F6 /* CDROTestHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637852A1491D6D30059C9F6 /* CDROTestHelper.m */; };
 		9637852E1491D84F0059C9F6 /* CDROTestHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 9637852D1491D84F0059C9F6 /* CDROTestHelper.h */; };
 		9637852F1491D84F0059C9F6 /* CDROTestHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 9637852D1491D84F0059C9F6 /* CDROTestHelper.h */; };
+		9639348114D5DF78007216CE /* HaveReceivedSpec.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6639A77A14C509FE00B564B7 /* HaveReceivedSpec.mm */; };
+		9639348214D5DF9C007216CE /* SimpleIncrementer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6639A77D14C50A6800B564B7 /* SimpleIncrementer.m */; };
+		9639348314D5DFFF007216CE /* CDRSpySpec.mm in Sources */ = {isa = PBXBuildFile; fileRef = 66F00B5114C4D97C00146D88 /* CDRSpySpec.mm */; };
 		966E74ED145A6CA0002E8D49 /* ShouldSyntaxSpec.mm in Sources */ = {isa = PBXBuildFile; fileRef = 966E74EC145A6CA0002E8D49 /* ShouldSyntaxSpec.mm */; };
 		966E74EE145A6CA0002E8D49 /* ShouldSyntaxSpec.mm in Sources */ = {isa = PBXBuildFile; fileRef = 966E74EC145A6CA0002E8D49 /* ShouldSyntaxSpec.mm */; };
+		9684816514D463DA00633538 /* HaveReceived.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9684816414D463DA00633538 /* HaveReceived.mm */; };
+		9684816614D463DA00633538 /* HaveReceived.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9684816414D463DA00633538 /* HaveReceived.mm */; };
 		968BA92F143485F800EA40B3 /* CDROTestIPhoneRunner.h in Headers */ = {isa = PBXBuildFile; fileRef = 968BA92E143485F800EA40B3 /* CDROTestIPhoneRunner.h */; };
 		96A07F0313F276640021974D /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE135D3111DEA6A900A922D4 /* OCMock.framework */; };
 		96A07F0413F276640021974D /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEEE1FB611DC271300029872 /* Cedar.framework */; };
@@ -416,6 +421,7 @@
 		9637852A1491D6D30059C9F6 /* CDROTestHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDROTestHelper.m; sourceTree = "<group>"; };
 		9637852D1491D84F0059C9F6 /* CDROTestHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDROTestHelper.h; sourceTree = "<group>"; };
 		966E74EC145A6CA0002E8D49 /* ShouldSyntaxSpec.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ShouldSyntaxSpec.mm; path = ../ShouldSyntaxSpec.mm; sourceTree = "<group>"; };
+		9684816414D463DA00633538 /* HaveReceived.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HaveReceived.mm; sourceTree = "<group>"; };
 		968BA92E143485F800EA40B3 /* CDROTestIPhoneRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDROTestIPhoneRunner.h; sourceTree = "<group>"; };
 		96A07F0813F276640021974D /* FocusedSpecs */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FocusedSpecs; sourceTree = BUILT_PRODUCTS_DIR; };
 		96A07F0A13F276B10021974D /* FocusedSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FocusedSpec.m; path = Focused/FocusedSpec.m; sourceTree = "<group>"; };
@@ -619,6 +625,7 @@
 			isa = PBXGroup;
 			children = (
 				6628FC9B14C4DEC50016652A /* CDRSpy.mm */,
+				9684816414D463DA00633538 /* HaveReceived.mm */,
 			);
 			name = Doubles;
 			sourceTree = "<group>";
@@ -1465,6 +1472,7 @@
 				9637852B1491D6D40059C9F6 /* CDROTestHelper.m in Sources */,
 				492951E01481AAFA00FA8916 /* CDRJUnitXMLReporter.m in Sources */,
 				6628FC9C14C4DEC50016652A /* CDRSpy.mm in Sources */,
+				9684816514D463DA00633538 /* HaveReceived.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1528,6 +1536,7 @@
 				9637852C1491D6D40059C9F6 /* CDROTestHelper.m in Sources */,
 				492951E11481AAFA00FA8916 /* CDRJUnitXMLReporter.m in Sources */,
 				6639A78714C540CC00B564B7 /* CDRSpy.mm in Sources */,
+				9684816614D463DA00633538 /* HaveReceived.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1561,6 +1570,9 @@
 				966E74EE145A6CA0002E8D49 /* ShouldSyntaxSpec.mm in Sources */,
 				AEBB92631496C1F000EEBD59 /* RaiseExceptionSpec.mm in Sources */,
 				492951E51482FF6300FA8916 /* CDRJUnitXMLReporterSpec.mm in Sources */,
+				9639348114D5DF78007216CE /* HaveReceivedSpec.mm in Sources */,
+				9639348214D5DF9C007216CE /* SimpleIncrementer.m in Sources */,
+				9639348314D5DFFF007216CE /* CDRSpySpec.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
