@@ -119,20 +119,33 @@ you can write the following:
 
 although you would more likely write the last line as:
 
-    expect(aBoolean).to(be_truthy());
+    expect(aBoolean).to(be_truthy);
 
 Here is a list of built-in matchers you can use:
 
-    expect(...).to(equal(10));
-    expect(...).to(be_nil());
+    expect(...).to(be_nil);
+    expect(...).to(be_truthy);
+    expect(...).to_not(be_truthy);
+
+    expect(...).to(be_empty);
+    expect(...).to(contain(@"something"));
+
+    expect(...).to(equal(something));
+    expect(...).to(be_same_instance_as(object));
+    expect(...).to(be_instance_of([NSObject class]));
+
     expect(...).to(be_close_to(5)); // default within(.01)
     expect(...).to(be_close_to(5).within(.02));
-    expect(...).to(be_instance_of([NSObject class]));
-    expect(...).to(be_same_instance_as(object));
-    expect(...).to(be_truthy());
-    expect(...).to_not(be_truthy());
-    expect(...).to(contain(@"something"));
-    expect(...).to(be_empty());
+
+    expect(...).to(be_greater_than(3));
+    expect(...).to(be_greater_than_or_equal_to(3));
+
+    expect(...).to(be_less_than(3));
+    expect(...).to(be_less_than_or_equal_to(3));
+
+    expect(^{ ... }).to(raise_exception);
+    expect(^{ ... }).to(raise_exception([NSObject class]));
+    expect(^{ ... }).to(raise_exception([NSObject class]).or_subclass());
 
 These matchers use C++ templates for type deduction.  You'll need to do two things to use them:
 
@@ -146,7 +159,7 @@ It's also theoretically very easy to add your own matchers without modifying the
 Cedar library (more on this later).
 
 These matchers will break Apple's GCC compiler, and versions 2.0 and older of the LLVM compiler
-(this translates to any compiler shipped with a version of Xcode before 4.1).  Fortunately, 
+(this translates to any compiler shipped with a version of Xcode before 4.1).  Fortunately,
 LLVM 2.1 fixes the issues.
 
 Note: If you decide to use another matcher library that uses `expect(...)` to
@@ -157,8 +170,9 @@ library's expect function.
 
 Note: If you prefer RSpec's `should` syntax you can write your expectations as follows:
 
-        1 + 2 should equal(3);
-        glass should_not be_empty();
+    1 + 2 should equal(3);
+    glass should_not be_empty;
+    ^{ throw @"BOOM!"; } should raise_exception;
 
 
 ## Shared example groups
@@ -231,11 +245,11 @@ object, and each shared example group will receive it:
 In many cases you have some housekeeping you'd like to take care of before every spec in your entire
 suite.  For example, loading fixtures or resetting a global variable.  Cedar will look for the
 +beforeEach and +afterEach class methods on every class it loads; you can add this class method
-onto any class you compile into your specs and Cedar will run it.  This allows spec libraries to 
-provide global +beforeEach and +afterEach methods specific to their own functionality, and they 
+onto any class you compile into your specs and Cedar will run it.  This allows spec libraries to
+provide global +beforeEach and +afterEach methods specific to their own functionality, and they
 will run automatically.
 
-If you want to run your own code before or after every spec, simply declare a class and implement 
+If you want to run your own code before or after every spec, simply declare a class and implement
 the +beforeEach and/or +afterEach methods.
 
 
@@ -251,7 +265,7 @@ the Pivotal fork of OCMock as a submodule.
 
 If you'd like to specify but not implement an example you can do so like this:
 
-          it(@"should do something eventually", PENDING);
+    it(@"should do something eventually", PENDING);
 
 The spec runner will not try to run this example, but report it as pending.  The
 PENDING keyword simply references a nil block pointer; if you prefer you can
@@ -266,9 +280,9 @@ Sometimes when debugging or developing a new feature it is useful to run only a
 subset of your tests.  That can be achieved by marking any number/combination of
 examples with an 'f'. You can use `fit`, `fdescribe` and `fcontext` like this:
 
-          fit(@"should do something eventually", ^{
-              // ...
-          });
+    fit(@"should do something eventually", ^{
+      // ...
+    });
 
 If your test suite has at least one focused example, all focused examples will
 run and non-focused examples will be skipped and reported as such (shown as '>'
@@ -318,7 +332,7 @@ Here is how it looks after that:
 
 If the default reporter for some reason does not fit your needs you can always
 write a custom reporter.  `CDRTeamCityReporter` is one such example.  It was
-written to output test results in a way that TeamCity CI server can understand. 
+written to output test results in a way that TeamCity CI server can understand.
 You can tell Cedar which reporter to use by setting `CEDAR_REPORTER_CLASS` env
 variable to your custom reporter class name.
 
@@ -426,9 +440,9 @@ check out the xcode3 branch from git and read the section on MACROS.
 You can place the codesnippet files contained in CodeSnippets directory into this location
 (you may need to create the directory):
 
-        ~/Library/Developer/XCode/UserData/CodeSnippets
+    ~/Library/Developer/XCode/UserData/CodeSnippets
 
-Alternately, you can run the installCodeSnippets script, which will do it for you. 
+Alternately, you can run the installCodeSnippets script, which will do it for you.
 
 
 ## Contributions and feedback
