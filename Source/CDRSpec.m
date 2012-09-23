@@ -3,6 +3,7 @@
 #import "CDRExampleGroup.h"
 #import "CDRSpecFailure.h"
 #import "SpecHelper.h"
+#import "CDRSymbolicator.h"
 
 CDRSpec *currentSpec;
 
@@ -18,6 +19,7 @@ CDRExampleGroup * describe(NSString *text, CDRSpecBlock block) {
     CDRExampleGroup *parentGroup = currentSpec.currentGroup;
 
     CDRExampleGroup *group = [CDRExampleGroup groupWithText:text];
+    group.stackAddress = CDRCallerStackAddress();
     [parentGroup add:group];
 
     if (block) {
@@ -29,11 +31,14 @@ CDRExampleGroup * describe(NSString *text, CDRSpecBlock block) {
 }
 
 CDRExampleGroup * context(NSString *text, CDRSpecBlock block) {
-    return describe(text, block);
+    CDRExampleGroup *group = describe(text, block);
+    group.stackAddress = CDRCallerStackAddress();
+    return group;
 }
 
 CDRExample * it(NSString *text, CDRSpecBlock block) {
     CDRExample *example = [CDRExample exampleWithText:text andBlock:block];
+    example.stackAddress = CDRCallerStackAddress();
     [currentSpec.currentGroup add:example];
     return example;
 }
@@ -72,7 +77,7 @@ void fail(NSString *reason) {
 
 @implementation CDRSpec
 
-@synthesize currentGroup = currentGroup_, rootGroup = rootGroup_;
+@synthesize currentGroup = currentGroup_, rootGroup = rootGroup_, fileName = fileName_;
 
 #pragma mark Memory
 - (id)init {
@@ -87,7 +92,7 @@ void fail(NSString *reason) {
 - (void)dealloc {
     self.rootGroup = nil;
     self.currentGroup = nil;
-
+    self.fileName = nil;
     [super dealloc];
 }
 
@@ -101,4 +106,54 @@ void fail(NSString *reason) {
     [[CDRSpecFailure specFailureWithReason:[exception reason]] raise];
 }
 
+- (void)markAsFocusedClosestToLineNumber:(NSUInteger)lineNumber {
+    NSArray *children = self.allChildren;
+    if (children.count == 0) return;
+
+    NSMutableArray *addresses = [NSMutableArray array];
+    for (CDRExampleBase *child in children) {
+        [addresses addObject:[NSNumber numberWithUnsignedInteger:child.stackAddress]];
+    }
+
+    // Use symbolication to find out locations of examples.
+    // We cannot turn describe/it/context into macros because:
+    //  - making them non-function macros pollutes namespace
+    //  - making them function macros causes xcode to highlight
+    //    wrong lines of code if there are errors present in the code
+    //  - also __LINE__ is unrolled from the outermost block
+    //    which causes incorrect values
+    CDRSymbolicator *symbolicator =
+        [[[CDRSymbolicator alloc] initWithStackAddresses:addresses] autorelease];
+
+    int bestAddressIndex = [children indexOfObject:self.rootGroup];
+
+    // Matches closest example/group located on or below specifed line number
+    // (only takes into account start of an example/group)
+    for (int i = 0, shortestDistance = -1; i < addresses.count; i++) {
+        NSUInteger address = [[addresses objectAtIndex:i] unsignedIntegerValue];
+        int distance = lineNumber - [symbolicator lineNumberForStackAddress:address];
+
+        if (distance >= 0 && (distance < shortestDistance || shortestDistance == -1) ) {
+            bestAddressIndex = i;
+            shortestDistance = distance;
+        }
+    }
+    [[children objectAtIndex:bestAddressIndex] setFocused:YES];
+}
+
+- (NSArray *)allChildren {
+    NSMutableArray *unseenChildren = [NSMutableArray arrayWithObject:self.rootGroup];
+    NSMutableArray *seenChildren = [NSMutableArray array];
+
+    while (unseenChildren.count > 0) {
+        CDRExampleBase *child = [unseenChildren lastObject];
+        [unseenChildren removeLastObject];
+
+        if (child.hasChildren) {
+            [unseenChildren addObjectsFromArray:[(CDRExampleGroup *)child examples]];
+        }
+        [seenChildren addObject:child];
+    }
+    return seenChildren;
+}
 @end

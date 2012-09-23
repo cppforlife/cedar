@@ -57,6 +57,10 @@
 		966E74ED145A6CA0002E8D49 /* ShouldSyntaxSpec.mm in Sources */ = {isa = PBXBuildFile; fileRef = 966E74EC145A6CA0002E8D49 /* ShouldSyntaxSpec.mm */; };
 		966E74EE145A6CA0002E8D49 /* ShouldSyntaxSpec.mm in Sources */ = {isa = PBXBuildFile; fileRef = 966E74EC145A6CA0002E8D49 /* ShouldSyntaxSpec.mm */; };
 		968BA92F143485F800EA40B3 /* CDROTestIPhoneRunner.h in Headers */ = {isa = PBXBuildFile; fileRef = 968BA92E143485F800EA40B3 /* CDROTestIPhoneRunner.h */; };
+		969B6F84160C61E000C7C792 /* CDRSymbolicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 969B6F82160C61E000C7C792 /* CDRSymbolicator.m */; };
+		969B6F86160C678400C7C792 /* CDRSymbolicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 969B6F82160C61E000C7C792 /* CDRSymbolicator.m */; };
+		969B6F96160F1FEC00C7C792 /* CDRSymbolicator.h in Headers */ = {isa = PBXBuildFile; fileRef = 969B6F95160F1FEC00C7C792 /* CDRSymbolicator.h */; };
+		969B6F97160F1FEC00C7C792 /* CDRSymbolicator.h in Headers */ = {isa = PBXBuildFile; fileRef = 969B6F95160F1FEC00C7C792 /* CDRSymbolicator.h */; };
 		96A07F0413F276640021974D /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEEE1FB611DC271300029872 /* Cedar.framework */; };
 		96A07F0B13F276B10021974D /* FocusedSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A07F0A13F276B10021974D /* FocusedSpec.m */; };
 		96A07F0F13F27F2F0021974D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A07F0E13F27F2F0021974D /* main.m */; };
@@ -434,6 +438,8 @@
 		9637852D1491D84F0059C9F6 /* CDROTestHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDROTestHelper.h; sourceTree = "<group>"; };
 		966E74EC145A6CA0002E8D49 /* ShouldSyntaxSpec.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ShouldSyntaxSpec.mm; path = ../ShouldSyntaxSpec.mm; sourceTree = "<group>"; };
 		968BA92E143485F800EA40B3 /* CDROTestIPhoneRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDROTestIPhoneRunner.h; sourceTree = "<group>"; };
+		969B6F82160C61E000C7C792 /* CDRSymbolicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDRSymbolicator.m; sourceTree = "<group>"; };
+		969B6F95160F1FEC00C7C792 /* CDRSymbolicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDRSymbolicator.h; sourceTree = "<group>"; };
 		96A07F0813F276640021974D /* FocusedSpecs */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FocusedSpecs; sourceTree = BUILT_PRODUCTS_DIR; };
 		96A07F0A13F276B10021974D /* FocusedSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FocusedSpec.m; path = Focused/FocusedSpec.m; sourceTree = "<group>"; };
 		96A07F0E13F27F2F0021974D /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Focused/main.m; sourceTree = "<group>"; };
@@ -929,6 +935,7 @@
 				96EA1CA6142C6425001A78E0 /* CDROTestReporter.m */,
 				96EA1CA7142C6425001A78E0 /* CDROTestRunner.m */,
 				9637852A1491D6D30059C9F6 /* CDROTestHelper.m */,
+				969B6F82160C61E000C7C792 /* CDRSymbolicator.m */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -957,6 +964,7 @@
 				96EA1CAC142C6449001A78E0 /* CDROTestReporter.h */,
 				96EA1CAD142C6449001A78E0 /* CDROTestRunner.h */,
 				9637852D1491D84F0059C9F6 /* CDROTestHelper.h */,
+				969B6F95160F1FEC00C7C792 /* CDRSymbolicator.h */,
 			);
 			path = Headers;
 			sourceTree = "<group>";
@@ -1163,6 +1171,7 @@
 				AECF136715D142E3003AAB9C /* ReturnValue.h in Headers */,
 				AECF136A15D1439B003AAB9C /* AnyArgument.h in Headers */,
 				AE94D03F15F341B200A0C2B7 /* AnyInstanceArgument.h in Headers */,
+				969B6F96160F1FEC00C7C792 /* CDRSymbolicator.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1177,6 +1186,7 @@
 				9637852F1491D84F0059C9F6 /* CDROTestHelper.h in Headers */,
 				492951DE1481AADA00FA8916 /* CDRJUnitXMLReporter.h in Headers */,
 				AE597B4215B0638B00EEF305 /* InvocationMatcher.h in Headers */,
+				969B6F97160F1FEC00C7C792 /* CDRSymbolicator.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1533,6 +1543,7 @@
 				AE94D04515F3449500A0C2B7 /* AnyInstanceArgument.mm in Sources */,
 				AEC7873915F440980058A27B /* InvocationMatcher.mm in Sources */,
 				AEC7874D15F444A50058A27B /* HaveReceived.mm in Sources */,
+				969B6F84160C61E000C7C792 /* CDRSymbolicator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1540,12 +1551,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AEEE21BE11DC290400029872 /* CDRExampleGroupSpec.mm in Sources */,
+				AEEE21C411DC290400029872 /* SpecSpec2.m in Sources */,
 				AEEE21BF11DC290400029872 /* CDRExampleSpec.mm in Sources */,
+				AEEE21BE11DC290400029872 /* CDRExampleGroupSpec.mm in Sources */,
 				AEEE21C111DC290400029872 /* main.m in Sources */,
 				AEEE21C211DC290400029872 /* GlobalBeforeEachSpec.mm in Sources */,
 				AEEE21C311DC290400029872 /* SpecSpec.mm in Sources */,
-				AEEE21C411DC290400029872 /* SpecSpec2.m in Sources */,
 				AE8C87AE136245BB006C9305 /* ExpectFailureWithMessage.m in Sources */,
 				96EA1CBA142C6560001A78E0 /* CDRSpecFailureSpec.mm in Sources */,
 				AEF7301B13ECC4AE00786282 /* BeCloseToSpec.mm in Sources */,
@@ -1610,6 +1621,7 @@
 				AE94D04615F3449500A0C2B7 /* AnyInstanceArgument.mm in Sources */,
 				AEC7873A15F440980058A27B /* InvocationMatcher.mm in Sources */,
 				AEC7874E15F444A50058A27B /* HaveReceived.mm in Sources */,
+				969B6F86160C678400C7C792 /* CDRSymbolicator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -40,12 +40,16 @@ void fail(NSString *);
 #endif // __cplusplus
 
 @interface CDRSpec : NSObject <CDRSpec> {
-  CDRExampleGroup *rootGroup_;
-  CDRExampleGroup *currentGroup_;
+    CDRExampleGroup *rootGroup_;
+    CDRExampleGroup *currentGroup_;
+    NSString *fileName_;
 }
 
 @property (nonatomic, retain) CDRExampleGroup *currentGroup, *rootGroup;
+@property (nonatomic, retain) NSString *fileName;
+
 - (void)defineBehaviors;
+- (void)markAsFocusedClosestToLineNumber:(NSUInteger)lineNumber;
 @end
 
 @interface CDRSpec (SpecDeclaration)
@@ -56,7 +60,8 @@ void fail(NSString *);
 @interface name : CDRSpec            \
 @end                                 \
 @implementation name                 \
-- (void)declareBehaviors {
+- (void)declareBehaviors {           \
+    self.fileName = [NSString stringWithUTF8String:__FILE__];
 
 #define SPEC_END                     \
 }                                    \
