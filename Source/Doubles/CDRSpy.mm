@@ -3,6 +3,14 @@
 #import "StubbedMethod.h"
 #import "CedarDoubleImpl.h"
 
+//@interface NSObjectz {
+//@public
+//    Class isb;
+//}
+//@end
+//@implementation NSObjectz
+//@end
+
 @implementation CDRSpy
 
 + (void)interceptMessagesForInstance:(id)instance {
@@ -12,33 +20,57 @@
     CedarDoubleImpl *cedar_double_impl = [[[CedarDoubleImpl alloc] initWithDouble:instance] autorelease];
     objc_setAssociatedObject(instance, @"cedar-double-implementation", cedar_double_impl, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 
-    NSUInteger originalRetainCount = [instance retainCount];
-    object_setClass(instance, self);
-    NSInteger shortfall = originalRetainCount - [instance retainCount];
-
-    while (shortfall-- > 0) {
-        [instance retain];
-    }
+    int before = (int)[instance retainCount];
+    object_setClass(instance, self); // ((NSObjectz *)instance)->isb = self;
+    NSLog(@"=======> diff=%d", before - (int)[instance retainCount]);
 }
 
-- (void)dealloc {
-    object_setClass(self, objc_getAssociatedObject(self, @"original-class"));
+#pragma mark - Memory
+// Use original class' memory management instead of relying on
+// NSProxy (superclass of NSObject) to implement these methods in the same way.
 
-    [self dealloc];
-
-    // DO NOT call the destructor on super, since the superclass has already
-    // destroyed itself when the original class's destructor called [super dealloc].
-    // This (no-op) line must be here to prevent the compiler from helpfully
-    // generating an error that the method has no [super dealloc] call.
-    if(0) { [super dealloc]; }
+- (id)autorelease {
+    __block id us = self;
+    [self as_original_class:^{
+        [us autorelease];
+    }];
+    return self;
 }
+
+- (NSUInteger)retainCount {
+    __block id us = self;
+    __block NSUInteger count = 0;
+    [self as_original_class:^{
+        count = [us retainCount];
+    }];
+    return count;
+}
+
+- (id)retain {
+    __block id us = self;
+    [self as_original_class:^{
+        [us retain];
+    }];
+    return self;
+}
+
+- (oneway void)release {
+    __block id us = self;
+    [self as_original_class:^{
+        [us release];
+    }];
+}
+
+// No need for dealloc since it's called from -(void)release
+// - (void)dealloc {}
+
+#pragma mark -
 
 - (NSString *)description {
-    __block NSString *description;
+    __block NSString *description = nil;
     [self as_original_class:^{
         description = [self description];
     }];
-
     return description;
 }
 

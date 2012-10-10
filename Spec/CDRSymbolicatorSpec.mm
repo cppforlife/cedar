@@ -22,7 +22,7 @@ describe(@"CDRSymbolicator", ^{
 
             [[symbolicator fileNameForStackAddress:b.stackAddress] hasSuffix:fileName] should be_truthy;
             [symbolicator lineNumberForStackAddress:b.stackAddress] should equal(lineNumber);
-            [symbolicator release];
+            // [symbolicator release];
         };
 
     it(@"identifies file name and line number of an it", ^{

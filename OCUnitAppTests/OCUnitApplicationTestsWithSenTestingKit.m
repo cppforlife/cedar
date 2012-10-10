@@ -6,7 +6,7 @@
 
 @implementation ExampleApplicationTestsWithSenTestingKit
 - (void)testApplicationTestsRun {
-    UILabel *label = [[[UILabel alloc] init] autorelease];
+    UILabel *label = [[UILabel alloc] init];
     STAssertEquals([label class], [UILabel class], @"expected an instance of UILabel to be UILabel kind");
 }
 
