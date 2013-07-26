@@ -197,6 +197,10 @@
 		AEB45A921496C8D800845D09 /* RaiseException.h in Copy headers to framework */ = {isa = PBXBuildFile; fileRef = AEB45A901496C8D800845D09 /* RaiseException.h */; };
 		AEBB92611496C1F000EEBD59 /* RaiseExceptionSpec.mm in Sources */ = {isa = PBXBuildFile; fileRef = AEBB92601496C1F000EEBD59 /* RaiseExceptionSpec.mm */; };
 		AEBB92631496C1F000EEBD59 /* RaiseExceptionSpec.mm in Sources */ = {isa = PBXBuildFile; fileRef = AEBB92601496C1F000EEBD59 /* RaiseExceptionSpec.mm */; };
+		AEC2A16517A266DA00DD262D /* NSObject+CDRChainSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = AEC2A16417A266DA00DD262D /* NSObject+CDRChainSelector.m */; };
+		AEC2A16617A266E000DD262D /* NSObject+CDRChainSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = AEC2A16417A266DA00DD262D /* NSObject+CDRChainSelector.m */; };
+		AEC2A16B17A2681600DD262D /* NSObject+CDRDeallocTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = AEC2A16A17A2681600DD262D /* NSObject+CDRDeallocTracker.m */; };
+		AEC2A16C17A2681600DD262D /* NSObject+CDRDeallocTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = AEC2A16A17A2681600DD262D /* NSObject+CDRDeallocTracker.m */; };
 		AEC40C50174AC4C700474D2D /* UIGeometryCompareEqual.h in Copy headers to framework */ = {isa = PBXBuildFile; fileRef = AEC40C4E174AC4C000474D2D /* UIGeometryCompareEqual.h */; };
 		AEC40C51174AC4C700474D2D /* UIGeometryStringifiers.h in Copy headers to framework */ = {isa = PBXBuildFile; fileRef = AEC40C4F174AC4C000474D2D /* UIGeometryStringifiers.h */; };
 		AEC40C54174AC51D00474D2D /* UIKitEqualSpec.mm in Sources */ = {isa = PBXBuildFile; fileRef = AEC40C53174AC51800474D2D /* UIKitEqualSpec.mm */; };
@@ -564,6 +568,10 @@
 		AEB45A901496C8D800845D09 /* RaiseException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RaiseException.h; sourceTree = "<group>"; };
 		AEBB92601496C1F000EEBD59 /* RaiseExceptionSpec.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RaiseExceptionSpec.mm; sourceTree = "<group>"; };
 		AEBCDD7E173ACD6700B42B58 /* CDRDefaultReporterSpec.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CDRDefaultReporterSpec.mm; sourceTree = "<group>"; };
+		AEC2A16417A266DA00DD262D /* NSObject+CDRChainSelector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+CDRChainSelector.m"; sourceTree = SOURCE_ROOT; };
+		AEC2A16717A2672800DD262D /* NSObject+CDRChainSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+CDRChainSelector.h"; sourceTree = "<group>"; };
+		AEC2A16A17A2681600DD262D /* NSObject+CDRDeallocTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+CDRDeallocTracker.m"; sourceTree = SOURCE_ROOT; };
+		AEC2A16D17A2689400DD262D /* NSObject+CDRDeallocTracker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+CDRDeallocTracker.h"; sourceTree = "<group>"; };
 		AEC40C4E174AC4C000474D2D /* UIGeometryCompareEqual.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UIGeometryCompareEqual.h; sourceTree = "<group>"; };
 		AEC40C4F174AC4C000474D2D /* UIGeometryStringifiers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UIGeometryStringifiers.h; sourceTree = "<group>"; };
 		AEC40C53174AC51800474D2D /* UIKitEqualSpec.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = UIKitEqualSpec.mm; sourceTree = "<group>"; };
@@ -936,6 +944,8 @@
 			isa = PBXGroup;
 			children = (
 				AE7F1704172730B000E1146D /* NSInvocation+Cedar.h */,
+				AEC2A16717A2672800DD262D /* NSObject+CDRChainSelector.h */,
+				AEC2A16D17A2689400DD262D /* NSObject+CDRDeallocTracker.h */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -944,6 +954,8 @@
 			isa = PBXGroup;
 			children = (
 				AE7F1705172730B000E1146D /* NSInvocation+Cedar.m */,
+				AEC2A16417A266DA00DD262D /* NSObject+CDRChainSelector.m */,
+				AEC2A16A17A2681600DD262D /* NSObject+CDRDeallocTracker.m */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1710,6 +1722,8 @@
 				AED23E6C173D5545003D7A41 /* BeCloseTo.mm in Sources */,
 				AE02021917452007009A7915 /* StringifiersBase.mm in Sources */,
 				AEE8DBD7175FFCF3008AF18A /* CDRSpyInfo.mm in Sources */,
+				AEC2A16517A266DA00DD262D /* NSObject+CDRChainSelector.m in Sources */,
+				AEC2A16B17A2681600DD262D /* NSObject+CDRDeallocTracker.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1802,6 +1816,8 @@
 				AED23E6D173D5545003D7A41 /* BeCloseTo.mm in Sources */,
 				AE02021A17452007009A7915 /* StringifiersBase.mm in Sources */,
 				AEE8DBD8175FFCF3008AF18A /* CDRSpyInfo.mm in Sources */,
+				AEC2A16617A266E000DD262D /* NSObject+CDRChainSelector.m in Sources */,
+				AEC2A16C17A2681600DD262D /* NSObject+CDRDeallocTracker.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

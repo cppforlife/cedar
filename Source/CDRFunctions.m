@@ -4,6 +4,7 @@
 #import "CDRExampleGroup.h"
 #import "CDRExampleReporter.h"
 #import "CDRDefaultReporter.h"
+#import "NSObject+CDRDeallocTracker.h"
 #import "SpecHelper.h"
 #import "CDRFunctions.h"
 
@@ -210,6 +211,10 @@ int runSpecsWithCustomExampleReporters(NSArray *reporters) {
             [reporter runDidComplete];
             result |= [reporter result];
         }
+
+        // Must be right before autorelease pool is drained
+        // to catch objects that are dealloced here.
+        [NSObject cdr_startDeallocTracker];
         return result;
     }
 }
