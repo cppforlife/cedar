@@ -18,33 +18,15 @@ sharedExamplesFor(@"a Cedar double when used with ARC", ^(NSDictionary *sharedCo
     });
 
     context(@"when recording an invocation", ^{
-        context(@"inside an async block", ^{
+        context(@"with a block on stack", ^{
             it(@"should complete happily", ^{
-                __block bool called = false;
                 myDouble stub_method("methodWithBlock:").and_do(^(NSInvocation *invocation) {
                     void (^runBlock)();
                     [invocation getArgument:&runBlock atIndex:2];
-                    runBlock();
-                    called = true;
                 });
 
-                dispatch_group_t group = dispatch_group_create();
-                dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
-                dispatch_group_async(group, queue, ^{
-                    dispatch_group_enter(group);
-                    [myDouble methodWithBlock:^{
-                        dispatch_group_leave(group);
-                    }];
-                });
-
-                while (!called) {
-                    [[NSRunLoop currentRunLoop] addTimer:[NSTimer timerWithTimeInterval:0.1 invocation:nil repeats:NO] forMode:NSDefaultRunLoopMode];
-                    NSDate *futureDate = [NSDate dateWithTimeIntervalSinceNow:0.1];
-                    [[NSRunLoop currentRunLoop] runUntilDate:futureDate];
-                }
-
-                myDouble should have_received("methodWithBlock:");
-                [myDouble reset_sent_messages];
+                int var = 0;
+                [myDouble methodWithBlock:^{ if (var) {} }];
             });
         });
     });

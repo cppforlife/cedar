@@ -15,10 +15,13 @@
             id argument = nil;
             [self getArgument:&argument atIndex:argumentIndex];
             if (argument) {
-                argument = [argument copy];
-                [copiedBlocks addObject:(id)argument];
+                // Even under ARC blocks need to be copied
+                // when passed down the stack into methods that retain.
+                // (i.e. collection methods such as addObject:)
+                id copiedArgument = [argument copy];
+                [copiedBlocks addObject:copiedArgument];
                 [argument release];
-                [self setArgument:&argument atIndex:argumentIndex];
+                [self setArgument:&copiedArgument atIndex:argumentIndex];
             }
         }
     }
