@@ -11,7 +11,7 @@ using namespace Cedar::Doubles;
 SHARED_EXAMPLE_GROUPS_BEGIN(CedarDoubleARCSharedExamples)
 
 sharedExamplesFor(@"a Cedar double when used with ARC", ^(NSDictionary *sharedContext) {
-    __block id<CedarDouble, SimpleIncrementer> myDouble;
+    __block __unsafe_unretained id<CedarDouble, SimpleIncrementer> myDouble;
 
     beforeEach(^{
         myDouble = [sharedContext objectForKey:@"double"];
